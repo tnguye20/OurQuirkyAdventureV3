@@ -66,3 +66,6 @@ node_modules/
 
 # service key for admin SDK
 serviceKey.json
+
+# vim tags file
+tags

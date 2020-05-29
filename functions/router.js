@@ -1,7 +1,7 @@
 const router = require('express').Router();
+const { express_callback } = require('./utils/express_callback');
+const { signup } = require('./controllers');
 
-router.get("/getName", (req, res) => {
-  res.status(200).json({name: "Thang"});
-});
+router.post("/auth/signup", express_callback(signup));
 
 module.exports = router;
