@@ -16,4 +16,3 @@ module.exports.express_callback = (controller) => {
     }
   }
 }
-

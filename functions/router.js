@@ -1,5 +1,6 @@
 const router = require('express').Router();
 const { express_callback } = require('./utils/express_callback');
+const { tokenVerify } = require('./middlewares/');
 const { signup, signin } = require('./controllers');
 
 router.post("/auth/signup", express_callback(signup));
