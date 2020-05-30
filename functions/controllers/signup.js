@@ -1,20 +1,19 @@
-
-const makeSignup = ({ createUser }) => {
+exports.makeSignup = ({ createUser }) => {
   return async (req) => {
     try{
-      newUser = await createUser(req.body);
+      const newUser = await createUser(req.body);
 
       if(newUser.uid !== undefined){
         return {
           body: {
             msg: "User Created Successfully",
-            user: newUser
+            ...newUser
           }
         }
       }
       return {
         statusCode: 400,
-        body: newUser
+        body: { ...newUser }
       }
     } catch(e) {
       console.log(e);
@@ -24,8 +23,4 @@ const makeSignup = ({ createUser }) => {
       }
     }
   }
-}
-
-module.exports = {
-  makeSignup
 }

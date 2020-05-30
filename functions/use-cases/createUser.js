@@ -1,19 +1,21 @@
-module.exports.makeCreateUser = ( {dba, auth, a} ) => {
+module.exports.makeCreateUser = ( {dba, auth} ) => {
   return async (userInfo) => {
     try{
-      const { user } = await auth.createUserWithEmailAndPassword(userInfo.email, userInfo.password)
-      const { uid, email, displayName, token } = user;
-      const newUser = await dba.insertUser({
+      const { email, password } = userInfo;
+      const { user } = await auth.createUserWithEmailAndPassword(email, password)
+      const { emailVerified, uid } = user;
+      await dba.insertUser({
         id: uid,
-        email, displayName,
-        associations: [],
-        createdAt: new Date().toISOString()
-      });
-      return {
-        uid,
         email,
+        associations: [],
+      });
+      const token = await user.getIdToken();
+      return {
         id: uid,
-        token
+        uid,
+        token,
+        email,
+        emailVerified
       };
     } catch (e) {
       return e;

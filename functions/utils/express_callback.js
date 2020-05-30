@@ -12,8 +12,7 @@ module.exports.express_callback = (controller) => {
           res.status(400).json({isError: true, body: err})
         })
     } catch(e) {
-      console.log(e);
-      res.status(500).json({isError: true, body: e})
+      res.status(500).json({isError: true, msg: "Internal Server Error"})
     }
   }
 }

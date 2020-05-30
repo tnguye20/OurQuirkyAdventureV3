@@ -4,7 +4,8 @@ const firebase = require('firebase');
 require('dotenv').config();
 
 const admin = a.initializeApp({
-  credential: a.credential.cert(serviceKey)
+  credential: a.credential.cert(serviceKey),
+  storageBucket: process.env.storageBucket
 });
 const firebaseConfig = firebase.initializeApp({
   apiKey: process.env.apiKey,
@@ -17,7 +18,7 @@ const firebaseConfig = firebase.initializeApp({
 });
 
 const db = admin.firestore();
-const storage = admin.storage();
+const storage = admin.storage().bucket();
 const auth = firebase.auth();
 
 module.exports = {
