@@ -3,11 +3,14 @@ const { dba } = require('../data-access');
 
 const { makeCreateUser } = require('./createUser');
 const { makeAuthUser } = require('./authUser');
+const { makeUploadToBucket } = require('./uploadToBucket');
 
 const createUser = makeCreateUser({ dba, auth });
 const authUser = makeAuthUser({ auth });
+const uploadToBucket = makeUploadToBucket({ storage });
 
 module.exports = Object.freeze({
   createUser,
-  authUser
+  authUser,
+  uploadToBucket
 })
