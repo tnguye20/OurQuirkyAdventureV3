@@ -1,6 +1,7 @@
 const a = require('firebase-admin');
 const serviceKey = require('./serviceKey.json');
 const firebase = require('firebase');
+require('firebase/storage');
 require('dotenv').config();
 
 const admin = a.initializeApp({
@@ -18,8 +19,9 @@ const firebaseConfig = firebase.initializeApp({
 });
 
 const db = admin.firestore();
-const storage = admin.storage().bucket();
 const auth = firebase.auth();
+const storage = admin.storage().bucket();
+// const storage = firebase.storage().ref();
 
 module.exports = {
   a,

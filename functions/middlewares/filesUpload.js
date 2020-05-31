@@ -41,6 +41,8 @@ exports.filesUpload = function(req, res, next) {
           if (err) {
             return reject(err);
           }
+          const [ nameOnly, extension ] = filename.split(".");
+          const category = mimetype.split("/")[0];
 
           files.push({
             localPath: filepath,
@@ -50,6 +52,9 @@ exports.filesUpload = function(req, res, next) {
             mimetype,
             buffer,
             size,
+            extension,
+            nameOnly,
+            category
           });
 
           try {

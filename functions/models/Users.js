@@ -1,4 +1,4 @@
-exports.User = ({
+exports.makeUser = ({
   id,
   displayName,
   email,

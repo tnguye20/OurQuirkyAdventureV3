@@ -1,24 +1,43 @@
-exports.makeUploadToBucket = ({ storage }) => {
+const config = require("../config");
+
+exports.makeUploadToBucket = ({ storage, Jimp, dba, uuid, makeMemory }) => {
   return async ({ user, files }) => {
     try{
       const bucketName = `${user.uid}`;
       const uploadPromises = [];
       for ( const file of files ){
-        const { originalname, mimetype, buffer } = file;
-        const category = mimetype.split("/")[0];
+        let { mimetype, buffer, nameOnly, category, extension } = file;
+        console.log(file);
+        const fullPath = `${bucketName}/${category}/${nameOnly}_${Date.now()}.${extension}`;
+        const token = uuid();
+        console.log(token);
         switch(category){
           case 'image':
-            const fullPath = `${bucketName}/${category}/${originalname}`;
-            uploadPromises.push( storage.file(fullPath).save(buffer, {
-              metadata: {
-                contentType: mimetype,
-              }
-            }) );
+            // const image = await Jimp.read(buffer);
+            // console.log(image);
+            // buffer = await image.rotate(270).getBufferAsync(mimetype);
+          default:
+            uploadPromises.push(
+              storage.file(fullPath).save(buffer, {
+                metadata: {
+                  contentType: mimetype,
+                  metadata: {
+                      firebaseStorageDownloadTokens: token
+                  }
+                }
+              }).then( file => {
+                const escapedPath = fullPath.replace(/\//g, "%2F");
+                dba.insertMemory(makeMemory({
+                  user: user.uid,
+                  url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
+                  createdDate: new Date().toISOString()
+                }));
+              })
+            )
             break;
-          default: break;
         }
       }
-      results = await Promise.all(uploadPromises);
+      await Promise.all(uploadPromises);
       return true;
     } catch (e) {
       console.log(e);
