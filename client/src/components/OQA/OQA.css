@@ -1,0 +1,28 @@
+p.slideCaption {
+  display: block;
+  position: absolute;
+  background: rgba(0,0,0, 0.6);
+  bottom: 6%;
+  font-size: 30px;
+  margin: auto;
+  z-index: 999;
+  width: 30%;
+  padding: 30px;
+  transform: translateX(-50%);
+  text-align: center;
+}
+
+.awssld__content > img {
+  width: auto !important;
+  right: 0;
+  margin: auto;
+  image-orientation: from-image;
+}
+
+.awssld__content {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.aws-btn {
+  --loader-bar-color: transparent;
+}

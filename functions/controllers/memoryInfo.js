@@ -1,12 +1,13 @@
-exports.makeUploadMemory = ({ uploadToBucket }) => {
+exports.makeMemoryInfo = ({ postMemoryInfo }) => {
   return async (req) => {
     try{
-      const { user, files } = req;
+      const { user } = req;
       let { info } = req.body;
       info = JSON.parse(info);
-      if( user !== undefined && files.length > 0 && Object.keys(info).length === files.length){
-        uploaded = await uploadToBucket({ user, files, info });
-        if(uploaded){
+      info.user = user.uid;
+      if( user !== undefined ){
+        res = await postMemoryInfo({ info });
+        if(res){
           return {
             body: {
               msg: "Upload Successfully",

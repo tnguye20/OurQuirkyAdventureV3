@@ -1,16 +1,17 @@
 const config = require("../config");
 
 exports.makeUploadToBucket = ({ storage, Jimp, dba, uuid, makeMemory }) => {
-  return async ({ user, files }) => {
+  return async ({ user, files, info }) => {
     try{
       const bucketName = `${user.uid}`;
       const uploadPromises = [];
+      let index = 0;
       for ( const file of files ){
-        let { mimetype, buffer, nameOnly, category, extension } = file;
-        console.log(file);
-        const fullPath = `${bucketName}/${category}/${nameOnly}_${Date.now()}.${extension}`;
+        let { mimetype, buffer, nameOnly, category, extension, size } = file;
+        const now = Date.now();
+        const isoString = new Date().toISOString();
+        const fullPath = `${bucketName}/${category}/${nameOnly}_${now}.${extension}`;
         const token = uuid();
-        console.log(token);
         switch(category){
           case 'image':
             // const image = await Jimp.read(buffer);
@@ -27,15 +28,25 @@ exports.makeUploadToBucket = ({ storage, Jimp, dba, uuid, makeMemory }) => {
                 }
               }).then( file => {
                 const escapedPath = fullPath.replace(/\//g, "%2F");
+                const { title, comment } = info[index];
+                const comments = [comment];
                 dba.insertMemory(makeMemory({
                   user: user.uid,
                   url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
-                  createdDate: new Date().toISOString()
+                  createdDate: isoString,
+                  mimetype,
+                  size,
+                  category,
+                  extension,
+                  title,
+                  comments,
+                  name: `${nameOnly}_${now}.${extension}`,
                 }));
               })
             )
             break;
         }
+        index = index +1;
       }
       await Promise.all(uploadPromises);
       return true;

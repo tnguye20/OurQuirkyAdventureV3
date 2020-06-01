@@ -28,6 +28,7 @@ exports.filesUpload = function(req, res, next) {
 
   busboy.on('file', (fieldname, file, filename, encoding, mimetype) => {
     const filepath = path.join(tmpdir, filename);
+    console.log(filepath);
     console.log(`Handling file upload field ${fieldname}: ${filename} (${filepath})`);
     const writeStream = fs.createWriteStream(filepath);
     file.pipe(writeStream);

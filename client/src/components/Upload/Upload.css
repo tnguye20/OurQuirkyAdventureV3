@@ -1,0 +1,7 @@
+img {
+  image-orientation: from-image;
+}
+
+form#uploadForm input {
+  display: none;
+}
