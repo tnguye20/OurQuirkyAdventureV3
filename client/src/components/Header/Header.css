@@ -1,0 +1,8 @@
+#header {
+  z-index: 100;
+  position: absolute !important;
+  width: 10%;
+  height: 10%;
+  top: 0;
+  left: 0;
+}

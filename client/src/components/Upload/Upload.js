@@ -13,6 +13,7 @@ import {
   Container,
   Grid,
   Button,
+  LinearProgress,
   makeStyles
 } from '@material-ui/core';
 
@@ -22,6 +23,9 @@ const useStyles = makeStyles((theme) => ({
   button: {
       margin: theme.spacing(1),
     },
+  progress: {
+    width: "100%"
+  }
 }));
 
 export const Upload = () => {
@@ -32,6 +36,7 @@ export const Upload = () => {
   const { uid, tokenId } = authUser;
   const [ files, setFiles ] = useState([]);
   const [ info, setInfo ] = useState({});
+  const [ isUploading, setIsUploading ] = useState(false);
 
   const removeImage = (index) => {
     const tmpFiles = [...files];
@@ -45,15 +50,13 @@ export const Upload = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    setIsUploading(true);
     try {
       const uploadPromises = [];
       const now = Date.now();
       for(const file of files){
         const { name, type, size } = file;
         const mimetype = type;
-        if ( mimetype.indexOf("image") !== -1 ){
-          delete info[name].src;
-        }
         const [ category, extension ] = mimetype.split("/");
         const nameOnly = name.split(".")[0];
         const newName = `${nameOnly}_${now}.${extension}`;
@@ -62,7 +65,7 @@ export const Upload = () => {
           const url = await snapshot.ref.getDownloadURL();
           const metadata = await snapshot.ref.getMetadata();
           const { timeCreated } = metadata;
-          info[name] = {...info[name], url, category, extension, size, mimetype, createdDate: timeCreated, name: newName};
+          info[name] = {title: info[name].title, comment: info[name].comment, url, category, extension, size, mimetype, createdDate: timeCreated, name: newName};
           const formData = new FormData();
           formData.append("info", JSON.stringify(info[name]));
           await axios.post("/memory/info", formData , {
@@ -71,9 +74,14 @@ export const Upload = () => {
         })
         uploadPromises.push(promise);
       }
-      await Promise.all(uploadPromises);
-      history.push("/");
+      if(uploadPromises.length > 0){
+        await Promise.all(uploadPromises);
+        history.push("/");
+      } else {
+        setIsUploading(false);
+      }
     } catch (err){
+      setIsUploading(false);
       console.log(err);
     }
   }
@@ -81,6 +89,7 @@ export const Upload = () => {
   const handleFilesChange = async (e) => {
     setInfo({});
     setFiles([]);
+    setIsUploading(true);
     const files = e.target.files;
     try{
       if (files.length > 0){
@@ -104,6 +113,7 @@ export const Upload = () => {
         } );
         setFiles(files);
         setInfo(newInfo);
+        setIsUploading(false);
       }
     } catch (e) {
       console.log(e);
@@ -113,25 +123,34 @@ export const Upload = () => {
   return (
     <>
       <Container maxWidth="md">
+        <br /><br />
         <h2>Upload Memory</h2>
         <Grid container spacing={2} direction="row">
-          <form onSubmit={handleSubmit} encType="multipart/form-data" id="uploadForm">
-              <input id="fileUpload" type="file" name="memories[]" multiple onChange={handleFilesChange}/>
-              <label htmlFor="fileUpload">
-              <Button className={classes.button} variant="contained" color="primary" component="span" size="medium" startIcon={<CloudUploadIcon />}>
-                  Select Memories
-                </Button>
-              </label>
-              <Button className={classes.button} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
-                Upload
-              </Button>
-          </form>
+            {
+              isUploading ? (
+                <>
+                  <LinearProgress className={classes.progress}/>
+                </>
+              ) : (
+                <form onSubmit={handleSubmit} encType="multipart/form-data" id="uploadForm">
+                  <input id="fileUpload" type="file" name="memories[]" multiple onChange={handleFilesChange}/>
+                  <label htmlFor="fileUpload">
+                    <Button disabled={isUploading} className={classes.button} variant="contained" color="primary" component="span" size="medium" startIcon={<CloudUploadIcon />}>
+                      Select Memories
+                    </Button>
+                  </label>
+                  <Button disabled={isUploading} className={classes.button} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
+                    Upload
+                  </Button>
+                </form>
+              )
+            }
         </Grid>
       </Container>
       <br />
       <br />
       {
-        Object.values(info).length > 0 ? ( <ImagePreviews info={info} setInfo={setInfo} removeImage={removeImage} /> ) : ""
+        Object.values(info).length > 0 ? ( <ImagePreviews isUploading={isUploading} info={info} setInfo={setInfo} removeImage={removeImage} /> ) : ""
       }
     </>
   )

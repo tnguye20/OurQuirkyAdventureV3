@@ -6,6 +6,9 @@ import withAutoplay from 'react-awesome-slider/dist/autoplay';
 import AnimationStyles from 'react-awesome-slider/src/styled/fold-out-animation/fold-out-animation.scss';
 import AwesomeSliderStyles from 'react-awesome-slider/src/styled/fall-animation';
 import './OQA.css';
+import {
+  Grid
+} from '@material-ui/core';
 
 const AutoplaySlider = withAutoplay(AwesomeSlider);
 
@@ -21,7 +24,7 @@ export const OQA = () => {
         fillParent={true}
         play={true}
         cancelOnInteraction={false}
-        interval={9000}
+        interval={5000}
         animation="fallAnimation"
         cssModule={[CoreStyles, AnimationStyles, AwesomeSliderStyles]}
       >
@@ -31,6 +34,24 @@ export const OQA = () => {
           </div>
         ) ) }
       </AutoplaySlider>
-    ) : <h1>Please</h1>
+    ) : ( <NoSlide /> )
+  )
+}
+
+const NoSlide = () => {
+  return (
+    <Grid
+    container
+    spacing={0}
+    direction="column"
+    alignItems="center"
+    justify="center"
+    style={{ minHeight: '100vh'}}
+    >
+      <Grid item xs={10} sm={6}>
+        <img src={process.env.PUBLIC_URL + '/noSlide.gif'} />
+        <p>Awww! There is nothing to show. Feel free to upload some memories ❤</p>
+      </Grid>
+    </Grid>
   )
 }

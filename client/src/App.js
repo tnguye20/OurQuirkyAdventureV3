@@ -12,6 +12,8 @@ import { Login } from './components/Login/';
 import { Signup } from './components/Signup/';
 import { Signout } from './components/Signout/';
 import { AuthRoute, UnAuthRoute } from './components/AuthRoute/';
+import { Header } from './components/Header';
+
 
 export const App = () => {
   return (
@@ -31,11 +33,13 @@ export const App = () => {
           </AuthRoute>
 
           <AuthRoute path="/upload">
+            <Header />
             <Upload />
           </AuthRoute>
 
           <AuthRoute exact path="/">
             <MemoriesContextProvider>
+              <Header />
               <OQA />
             </MemoriesContextProvider>
           </AuthRoute>

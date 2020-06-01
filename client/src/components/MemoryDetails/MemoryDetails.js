@@ -10,6 +10,7 @@ import {
 } from '@material-ui/core';
 
 export const MemoryDetails = ({
+  isUploading,
   open,
   handleClose,
   handleAddDetails,
@@ -46,10 +47,10 @@ export const MemoryDetails = ({
         />
       </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
+        <Button disabled={isUploading} onClick={handleClose} color="secondary" variant="outlined" size="small">
           Cancel
         </Button>
-        <Button onClick={handleAddDetails} color="primary" variant="outlined" size="small">
+        <Button disabled={isUploading} onClick={handleAddDetails} color="primary" variant="outlined" size="small">
           Add Details
         </Button>
       </DialogActions>
