@@ -3,7 +3,7 @@ exports.makeMemory = ({
   url,
   createdDate,
   title = "One of my best memories with you",
-  comment,
+  comment = "",
   comments = [],
   mimetype,
   size,
@@ -17,7 +17,7 @@ exports.makeMemory = ({
   if(comments.length === 0){
     comments = [];
   }
-  if(comment !== undefined){
+  if(comment.length > 0){
     comments.push(comment);
   }
   if(user === undefined){

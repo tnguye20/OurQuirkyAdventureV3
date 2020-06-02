@@ -49,7 +49,7 @@ const NoSlide = () => {
     style={{ minHeight: '100vh'}}
     >
       <Grid item xs={10} sm={6}>
-        <img src={process.env.PUBLIC_URL + '/noSlide.gif'} />
+        <img alt="Default for no slide" src={process.env.PUBLIC_URL + '/noSlide.gif'} />
         <p>Awww! There is nothing to show. Feel free to upload some memories ❤</p>
       </Grid>
     </Grid>

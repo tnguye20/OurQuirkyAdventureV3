@@ -13,6 +13,7 @@ import {
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
+import AppsIcon from '@material-ui/icons/Apps';
 import MenuIcon from '@material-ui/icons/Menu';
 import './Header.css';
 
@@ -53,6 +54,11 @@ export const Header = () => {
         <ListItem button onClick={ e => { setOpen(false); history.push("/")  } }>
           <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Slideshow" />
+        </ListItem>
+        <Divider />
+        <ListItem button onClick={ e => { setOpen(false); history.push("/grid")  } }>
+          <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
+          <ListItemText primary="Grid Mode" />
         </ListItem>
         <Divider />
         <ListItem button onClick={handleSignOut}>

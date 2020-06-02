@@ -7,6 +7,7 @@ import { AuthProvider, MemoriesContextProvider } from './contexts';
 import * as ROUTES from './constants/routes';
 
 import { OQA } from './components/OQA';
+import { GridMode } from './components/GridMode';
 import { Upload } from './components/Upload';
 import { Login } from './components/Login/';
 import { Signup } from './components/Signup/';
@@ -30,6 +31,13 @@ export const App = () => {
 
           <AuthRoute path={ ROUTES.SIGNOUT }>
             <Signout />
+          </AuthRoute>
+
+          <AuthRoute path="/grid">
+            <MemoriesContextProvider>
+              <Header />
+              <GridMode />
+            </MemoriesContextProvider>
           </AuthRoute>
 
           <AuthRoute path="/upload">
