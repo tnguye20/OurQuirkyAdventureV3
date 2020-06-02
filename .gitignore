@@ -69,3 +69,6 @@ serviceKey.json
 
 # vim tags file
 tags
+
+# Build Directory
+build/

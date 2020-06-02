@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { storage } from '../../utils/firebase';
+import { storage, db } from '../../utils/firebase';
 import { ImagePreviews } from '../ImagePreviews';
 import { useAuthValue } from '../../contexts';
 import { FILE_FORMATS } from '../../constants/files';
@@ -17,7 +17,7 @@ import {
   makeStyles
 } from '@material-ui/core';
 
-import axios from 'axios';
+// import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -33,7 +33,8 @@ export const Upload = () => {
 
   const history = useHistory();
   const { authUser } = useAuthValue();
-  const { uid, tokenId } = authUser;
+  // const { uid, tokenId } = authUser;
+  const { uid } = authUser;
   const [ files, setFiles ] = useState([]);
   const [ info, setInfo ] = useState({});
   const [ isUploading, setIsUploading ] = useState(false);
@@ -65,12 +66,20 @@ export const Upload = () => {
           const url = await snapshot.ref.getDownloadURL();
           const metadata = await snapshot.ref.getMetadata();
           const { timeCreated } = metadata;
-          info[name] = {title: info[name].title, comment: info[name].comment, url, category, extension, size, mimetype, createdDate: timeCreated, name: newName};
-          const formData = new FormData();
-          formData.append("info", JSON.stringify(info[name]));
-          await axios.post("/memory/info", formData , {
-            headers: { "Authorization": "Bearer " + tokenId }
-          });
+          const { title, comment } = info[name];
+          info[name] = {user: uid, title, comment, url, category, extension, size, mimetype, createdDate: timeCreated, name: newName};
+          if (comment.length > 0) {
+            info[name].comments = [ comment ];
+          }
+          if (title.length === 0 ){
+            info[name].title = "One of my best memories with you";
+          }
+          db.collection("memories").add(info[name]);
+          // const formData = new FormData();
+          // formData.append("info", JSON.stringify(info[name]));
+          // await axios.post("/memory/info", formData , {
+          //   headers: { "Authorization": "Bearer " + tokenId }
+          // });
         })
         uploadPromises.push(promise);
       }
