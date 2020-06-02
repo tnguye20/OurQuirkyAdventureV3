@@ -58,7 +58,7 @@ export const ImagePreviews = ({ info, setInfo, removeImage }) => {
                     />
                     <CardActions>
                       <Button size="small" color="primary" onClick={ (e) => handleOpen(filename) }>
-                        { info[filename].title === "" || info[filename].comment === "" ? "Add" : "Edit" } Details
+                        { info[filename].title === "" && info[filename].comment === "" ? "Add" : "Edit" } Details
                       </Button>
                       <Button size="small" color="secondary" onClick={ e => removeImage(index) }>
                         Delete
