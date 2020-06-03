@@ -12,11 +12,24 @@ p.slideCaption {
   text-align: center;
 }
 
-.awssld__content > img {
-  width: auto !important;
-  right: 0;
-  margin: auto;
-  image-orientation: from-image;
+@media (min-width: 1281px) {
+  .awssld__content > img {
+    width: auto !important;
+    right: 0;
+    margin: auto;
+    image-orientation: from-image;
+  }
+}
+
+@media (min-width: 501px) and (max-width: 1281px) {
+  .awssld__content > img {
+    object-fit: contain !important;
+    width: 100% !important;
+  }
+}
+
+@media (max-width: 500px) {
+
 }
 
 .awssld__content {

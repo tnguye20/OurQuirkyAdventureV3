@@ -21,7 +21,6 @@ export const useMemories = () => {
         return filtered;
       }, []);
 
-      console.log(snapshotMemories);
       setMemories(snapshotMemories);
     });
 

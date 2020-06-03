@@ -29,7 +29,7 @@ export const OQA = () => {
         cssModule={[CoreStyles, AnimationStyles, AwesomeSliderStyles]}
       >
         { memories.map( (memory, index) => (
-          <div key={index} data-src={memory.url}>
+          <div key={index} data-src={memory.url} className="slideContainer">
             <p className="slideCaption">{ memory.title }</p>
           </div>
         ) ) }
