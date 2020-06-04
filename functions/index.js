@@ -7,9 +7,9 @@ const api = functions.https.onRequest(app);
 
 // })
 const { extractImageMeta } = require('./triggers');
-const _extractImageMeta = functions.storage.object().onFinalize( extractImageMeta );
+const imageMetadata = functions.storage.object().onFinalize( extractImageMeta );
 
 module.exports = {
   api,
-  _extractImageMeta
+  imageMetadata
 }

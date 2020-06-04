@@ -29,8 +29,17 @@ export const OQA = () => {
         cssModule={[CoreStyles, AnimationStyles, AwesomeSliderStyles]}
       >
         { memories.map( (memory, index) => (
-          <div key={index} data-src={memory.url} className="slideContainer">
-            <p className="slideCaption">{ memory.title }</p>
+          <div key={index} data-src={memory.url}>
+            <div className="slideCaption">
+              <b>{ memory.title }</b>
+              {
+                memory.latitude !== undefined ? (
+                  <div className="slideMeta">
+                    <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
+                  </div>
+                ) : ""
+              }
+            </div>
           </div>
         ) ) }
       </AutoplaySlider>
