@@ -1,6 +1,6 @@
 const router = require('express').Router();
 
-const { express_callback } = require('./utils/express_callback');
+const { express_callback } = require('./utils');
 const { tokenVerify, filesUpload } = require('./middlewares/');
 const { signup, signin, uploadMemory, memoryInfo } = require('./controllers');
 
