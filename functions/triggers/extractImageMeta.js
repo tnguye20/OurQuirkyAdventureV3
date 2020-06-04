@@ -26,10 +26,10 @@ exports.extractImageMeta = async ( object, context ) => {
     await storage.file(filePath).download({destination: tempLocalFile});
     const result = await spawn('identify', ['-verbose', tempLocalFile], {capture: ['stdout', 'stderr']});
     const metadata = imageMagickOutputToObject(result.stdout);
-    let latitude = json.Properties["exif:GPSLatitude"];
-    let latRef = json.Properties["exif:GPSLatitudeRef"];
-    let longitude = json.Properties["exif:GPSLongitude"];
-    let longRef = json.Properties["exif:GPSLongitudeRef"];
+    let latitude = metadata.Properties["exif:GPSLatitude"];
+    let latRef = metadata.Properties["exif:GPSLatitudeRef"];
+    let longitude = metadata.Properties["exif:GPSLongitude"];
+    let longRef = metadata.Properties["exif:GPSLongitudeRef"];
     if(latitude !== unescape && longitude !== undefined){
       latitude = geoCalculate(latitude, latRef);
       longitude = geoCalculate(longitude, longRef);
