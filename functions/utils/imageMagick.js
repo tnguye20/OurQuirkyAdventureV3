@@ -12,6 +12,12 @@ const imageMagickOutputToObject = (output) => {
       lines[index] = makeKeyFirebaseCompatible(`"${line.replace(':', '":{')}`);
     } else {
       const split = line.replace('"', '\\"').split(': ');
+      if (split.length > 2){
+        // We have a rough entry
+        while( split.length > 2 ){
+         split[1] += split.pop().trim();
+        }
+      }
       split[0] = makeKeyFirebaseCompatible(split[0]);
       lines[index] = `"${split.join('":"')}",`;
     }

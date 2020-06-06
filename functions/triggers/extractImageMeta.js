@@ -24,7 +24,7 @@ exports.extractImageMeta = async ( object ) => {
   const tempLocalFile = path.join(os.tmpdir(), randomFileName);
 
   if (!object.contentType.startsWith('image/')) {
-    console.log('This is not an image.');
+    console.log(fileName + ' this is not an image.');
     return null;
   }
 
@@ -41,10 +41,17 @@ exports.extractImageMeta = async ( object ) => {
       longitude = geoCalculate(longitude, longRef);
       let location = await geoCoder.reverse({ lat: latitude, lon: longitude });
       location = location[0];
+      const gpsInfo = {};
+      Object.entries(location).forEach( item => {
+        let [ key, value ] = item;
+        gpsInfo[key] = value === undefined || value === null ? "" : value;
+      });
+      console.log(fileName);
+      console.log(gpsInfo);
       const memories = await db.collection("memories").where("name", "==", fileName).get();
       memories.forEach( async memory =>{
         if ( memory.exists ){
-          await db.collection("memories").doc(memory.id).update(location);
+          await db.collection("memories").doc(memory.id).update(gpsInfo);
         }
       })
     }
