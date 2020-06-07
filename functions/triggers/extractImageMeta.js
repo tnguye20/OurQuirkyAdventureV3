@@ -36,6 +36,12 @@ exports.extractImageMeta = async ( object ) => {
     let latRef = metadata.Properties["exif:GPSLatitudeRef"];
     let longitude = metadata.Properties["exif:GPSLongitude"];
     let longRef = metadata.Properties["exif:GPSLongitudeRef"];
+    let originalDate = metadata.Properties["exif:DateTimeOriginal"];
+    let updatedMetadata = {};
+    if ( originalDate !== undefined ){
+      const takenDate = new Date(originalDate.trim().replace(/(\d+):(\d+):(\d+) /, "$1/$2/$3 ")).toISOString();
+      updatedMetadata = { takenDate };
+    }
     if(latitude !== undefined && longitude !== undefined){
       latitude = geoCalculate(latitude, latRef);
       longitude = geoCalculate(longitude, longRef);
@@ -48,13 +54,14 @@ exports.extractImageMeta = async ( object ) => {
       });
       console.log(fileName);
       console.log(gpsInfo);
-      const memories = await db.collection("memories").where("name", "==", fileName).get();
-      memories.forEach( async memory =>{
-        if ( memory.exists ){
-          await db.collection("memories").doc(memory.id).update(gpsInfo);
-        }
-      })
+      Object.assign(updatedMetadata, gpsInfo);
     }
+    const memories = await db.collection("memories").where("name", "==", fileName).get();
+    memories.forEach( async memory =>{
+      if ( memory.exists ){
+        await db.collection("memories").doc(memory.id).update(updatedMetadata);
+      }
+    })
     fs.unlinkSync(tempLocalFile);
     return "Update Succesfull"
   } catch (e) {

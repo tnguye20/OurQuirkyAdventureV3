@@ -33,7 +33,7 @@ exports.makeUploadToBucket = ({ storage, Jimp, dba, uuid, makeMemory }) => {
                 dba.insertMemory(makeMemory({
                   user: user.uid,
                   url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
-                  createdDate: isoString,
+                  uploadTime: isoString,
                   mimetype,
                   size,
                   category,
