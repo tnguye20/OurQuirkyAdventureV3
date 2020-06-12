@@ -67,14 +67,37 @@ export const Upload = () => {
           const metadata = await snapshot.ref.getMetadata();
           const { timeCreated } = metadata;
           const { title, comment } = info[name];
-          info[name] = {user: uid, title, comment, url, category, extension, size, mimetype, createdDate: timeCreated, name: newName};
-          if (comment.length > 0) {
-            info[name].comments = [ comment ];
-          }
+          info[name] = {
+            user: uid,
+            title,
+            url,
+            category,
+            extension,
+            size,
+            mimetype,
+            uploadDate: timeCreated,
+            name: newName,
+            takenDate: new Date().toISOString(),
+            comments: [],
+          };
           if (title.length === 0 ){
             info[name].title = "One of my best memories with you";
           }
-          db.collection("memories").add(info[name]);
+          db.collection("memories").add(info[name]).then( ref => {
+            if (comment.length > 0) {
+              info[name].comments = {
+                memoryID: ref.id,
+                user: uid,
+                createDate: timeCreated,
+                text: comment,
+                replyToId: null,
+                modifiedOn: timeCreated
+              }
+              db.collection("memories").doc(ref.id).update({comments: [ info[name].comments ]})
+            } else {
+              info[name].comments = [];
+            }
+          })
           // const formData = new FormData();
           // formData.append("info", JSON.stringify(info[name]));
           // await axios.post("/memory/info", formData , {

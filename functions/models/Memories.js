@@ -1,7 +1,8 @@
 exports.makeMemory = ({
   user,
   url,
-  uploadTime,
+  uploadDate,
+  takenDate,
   title = "One of my best memories with you",
   comment = "",
   comments = [],
@@ -32,7 +33,8 @@ exports.makeMemory = ({
   return Object.freeze({
     user,
     url,
-    uploadTime,
+    uploadDate,
+    takenDate,
     title,
     comments,
     mimetype,

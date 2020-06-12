@@ -10,7 +10,7 @@ export const useMemories = () => {
     let unsubscribe = db
       .collection("memories")
       .where("user", "==", authUser.uid )
-      .orderBy("createdDate");
+      .orderBy("takenDate");
 
     unsubscribe = unsubscribe.onSnapshot( snapshot => {
       const snapshotMemories = snapshot.docs.reduce( (filtered, memory) => {

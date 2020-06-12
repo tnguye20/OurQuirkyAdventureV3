@@ -58,7 +58,7 @@ exports.extractImageMeta = async ( object ) => {
     }
     const memories = await db.collection("memories").where("name", "==", fileName).get();
     memories.forEach( async memory =>{
-      if ( memory.exists ){
+      if ( memory.exists && Object.keys(updatedMetadata).length > 0){
         await db.collection("memories").doc(memory.id).update(updatedMetadata);
       }
     })
