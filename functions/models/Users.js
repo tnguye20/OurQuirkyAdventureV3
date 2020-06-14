@@ -1,14 +1,19 @@
 exports.makeUser = ({
-  id,
-  displayName,
-  email,
+  id = "",
+  displayName = "",
+  email = "",
   emailVerified = false,
   associations = [],
-  password = undefined
+  password = "",
+  collections = []
 }) => {
-  if (id === undefined || displayName === undefined || email === undefined){
+  if (displayName === "" || email === "" || password === ""){
     throw new Error("Insufiicient User data");
   }
+
+  const addCollection = ( collection ) => (
+    collections.push(collection)
+  );
 
   return Object.freeze({
     getID: () => id,
@@ -16,6 +21,8 @@ exports.makeUser = ({
     getEmail: () => email,
     getPassword: () => password,
     isVerified: () => emailVerified,
-    getAssociations: () => associations
+    getAssociations: () => associations,
+    getCollections: () => collections,
+    addCollection,
   })
 }

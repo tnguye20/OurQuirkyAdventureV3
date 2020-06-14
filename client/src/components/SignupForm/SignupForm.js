@@ -10,6 +10,7 @@ export const SignupForm = () => {
   const { setAuthUser } = useAuthValue();
   const [ email, setEmail ] = useState("");
   const [ password, setPassword ] = useState("");
+  const [ displayName, setDisplayName ] = useState("");
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -37,6 +38,15 @@ export const SignupForm = () => {
           label="Email"
           fullWidth
           onChange={e => setEmail(e.target.value)}
+        />
+        <br /><br /><br />
+        <TextField
+          autoFocus
+          id="name"
+          color="secondary"
+          label="Display Name"
+          fullWidth
+          onChange={e => setDisplayName(e.target.value)}
         />
         <br /><br /><br />
         <TextField

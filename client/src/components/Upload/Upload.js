@@ -100,7 +100,7 @@ export const Upload = () => {
           })
           // const formData = new FormData();
           // formData.append("info", JSON.stringify(info[name]));
-          // await axios.post("/memory/info", formData , {
+          // await axios.post("api/memory/info", formData , {
           //   headers: { "Authorization": "Bearer " + tokenId }
           // });
         })

@@ -1,24 +1,34 @@
+const { makeUser } = require('../models/Users');
+
 module.exports.makeCreateUser = ( {dba, auth} ) => {
   return async (userInfo) => {
     try{
-      const { email, password } = userInfo;
-      const { user } = await auth.createUserWithEmailAndPassword(email, password)
+      const userModel = makeUser(userInfo);
+
+      const email = userModel.getEmail();
+      const password = userModel.getPassword();
+
+      const { user } = await auth.createUserWithEmailAndPassword(email, password);
       const { emailVerified, uid } = user;
-      await dba.insertUser({
+
+      const newUser = {
         id: uid,
         email,
-        associations: [],
-      });
-      const token = await user.getIdToken();
-      return {
-        id: uid,
-        uid,
-        token,
-        email,
-        emailVerified
+        emailVerified,
+        displaynName: userModel.getName(),
+        associations: userModel.getAssociations(),
+        collections: userModel.getCollections()
       };
+      await dba.insertUser(newUser);
+
+      const token = await user.getIdToken();
+      newUser.token = token;
+      return newUser;
+      
     } catch (e) {
-      return e;
+      return { 
+        error: "Insufiicient User Data"
+      }
     }
   }
 }

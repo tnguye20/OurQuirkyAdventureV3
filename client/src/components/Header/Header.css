@@ -1,6 +1,6 @@
 #header {
   z-index: 100;
-  position: absolute !important;
+  position: fixed !important;
   width: 10%;
   height: 10%;
   top: 0;

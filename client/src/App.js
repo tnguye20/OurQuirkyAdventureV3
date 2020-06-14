@@ -15,6 +15,7 @@ import { Signout } from './components/Signout/';
 import { AuthRoute, UnAuthRoute } from './components/AuthRoute/';
 import { Header } from './components/Header';
 
+import { Landing } from './components/Landing';
 
 export const App = () => {
   return (
@@ -33,19 +34,23 @@ export const App = () => {
             <Signout />
           </AuthRoute>
 
-          <AuthRoute path="/grid">
+          <AuthRoute path={ ROUTES.GRID }>
             <MemoriesContextProvider>
               <Header />
               <GridMode />
             </MemoriesContextProvider>
           </AuthRoute>
 
-          <AuthRoute path="/upload">
+          <AuthRoute path={ ROUTES.UPLOAD }>
             <Header />
             <Upload />
           </AuthRoute>
 
-          <AuthRoute exact path="/">
+          <AuthRoute path="/landing">
+            <Landing />
+          </AuthRoute>
+
+          <AuthRoute exact path={ ROUTES.ROOT }>
             <MemoriesContextProvider>
               <Header />
               <OQA />
