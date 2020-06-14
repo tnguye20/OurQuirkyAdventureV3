@@ -3,18 +3,18 @@ exports.makeSignup = ({ createUser }) => {
     try{
       const newUser = await createUser(req.body);
 
-      if(newUser.uid !== undefined){
+      // if(newUser.id !== undefined){
         return {
           body: {
             msg: "User Created Successfully",
             ...newUser
           }
         }
-      }
-      return {
-        statusCode: 400,
-        body: { ...newUser }
-      }
+      // }
+      // return {
+      //   statusCode: 400,
+      //   body: { ...newUser }
+      // }
     } catch(e) {
       console.log(e);
       return {

@@ -4,15 +4,20 @@ module.exports.makeCreateUser = ( {dba, auth} ) => {
   return async (userInfo) => {
     try{
       const userModel = makeUser(userInfo);
-
+      let id = userModel.getID();
+      let emailVerified = userModel.isVerified();
       const email = userModel.getEmail();
       const password = userModel.getPassword();
+      const { dbOnly } = userInfo;
 
-      const { user } = await auth.createUserWithEmailAndPassword(email, password);
-      const { emailVerified, uid } = user;
+      if ( dbOnly !== true && id !== undefined ){
+        const { user } = await auth.createUserWithEmailAndPassword(email, password);
+        id = user.uid;
+        emailVerified = user.emailVerified;
+      }
 
       const newUser = {
-        id: uid,
+        id,
         email,
         emailVerified,
         displaynName: userModel.getName(),
@@ -21,11 +26,14 @@ module.exports.makeCreateUser = ( {dba, auth} ) => {
       };
       await dba.insertUser(newUser);
 
-      const token = await user.getIdToken();
-      newUser.token = token;
+      if ( dbOnly !== true && id !== undefined ){
+        const token = await user.getIdToken();
+        newUser.token = token;
+      }
       return newUser;
       
     } catch (e) {
+      console.log(e);
       return { 
         error: "Insufiicient User Data"
       }

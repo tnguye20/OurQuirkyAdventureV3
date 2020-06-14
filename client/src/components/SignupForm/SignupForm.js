@@ -1,10 +1,13 @@
 import React, { useState } from 'react';
 import { useAuthValue } from '../../contexts';
-import { auth, db } from '../../utils/firebase';
+import { auth } from '../../utils/firebase';
 import {
   TextField,
   Button
 } from '@material-ui/core';
+
+import axios from 'axios';
+import { API_SIGNUP } from '../../constants/routes';
 
 export const SignupForm = () => {
   const { setAuthUser } = useAuthValue();
@@ -16,14 +19,21 @@ export const SignupForm = () => {
     e.preventDefault();
     auth.createUserWithEmailAndPassword(email, password)
       .then( ({ user }) => {
-        const { uid, displayName } = user;
+        const { uid, emailVerified } = user;
         console.log(uid);
         console.log(displayName);
-        db.collection("users").doc(uid).set({
-          displayName,
-          email
-        });
-        setAuthUser(user);
+        const formData = { id: uid, email, password, displayName, emailVerified, dbOnly: true };
+        axios.post( API_SIGNUP, formData )
+          .then( newUser => {
+            setAuthUser(user);
+          })
+          .catch( error => {
+            console.log(error.toJSON());
+          })
+        // db.collection("users").doc(uid).set({
+        //   displayName,
+        //   email
+        // });
       })
   }
 
@@ -41,7 +51,6 @@ export const SignupForm = () => {
         />
         <br /><br /><br />
         <TextField
-          autoFocus
           id="name"
           color="secondary"
           label="Display Name"

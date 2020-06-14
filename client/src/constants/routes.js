@@ -6,4 +6,4 @@ export const ROOT = '/';
 export const GRID = '/grid';
 export const SLIDE = '/slide';
 export const UPLOAD = '/upload';
-
+export const API_SIGNUP = '/api/auth/signup';
