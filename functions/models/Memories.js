@@ -4,7 +4,7 @@ exports.makeMemory = ({
   uploadDate,
   takenDate,
   title = "One of my best memories with you",
-  comment = "",
+  comment = null,
   comments = [],
   mimetype,
   size,
@@ -18,8 +18,11 @@ exports.makeMemory = ({
   if(comments.length === 0){
     comments = [];
   }
-  if(comment.length > 0){
-    comments.push(comment);
+  if(comment !== null){
+    const { user, memoryID } = comment;
+    if ( user !== undefined && memoryID !== undefined){
+      comments.push({...comment});
+    }
   }
   if(user === undefined){
     throw new Error("Invalid User");

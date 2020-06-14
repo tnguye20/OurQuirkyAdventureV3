@@ -85,7 +85,7 @@ export const Upload = () => {
           }
           db.collection("memories").add(info[name]).then( ref => {
             if (comment.length > 0) {
-              info[name].comments = {
+              info[name].comment = {
                 memoryID: ref.id,
                 user: uid,
                 createDate: timeCreated,
@@ -93,7 +93,7 @@ export const Upload = () => {
                 replyToId: null,
                 modifiedOn: timeCreated
               }
-              db.collection("memories").doc(ref.id).update({comments: [ info[name].comments ]})
+              db.collection("memories").doc(ref.id).update({comments: [ info[name].comment ]})
             } else {
               info[name].comments = [];
             }

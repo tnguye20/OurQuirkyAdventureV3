@@ -10,6 +10,8 @@ import {
   Grid
 } from '@material-ui/core';
 
+import moment from 'moment';
+
 const AutoplaySlider = withAutoplay(AwesomeSlider);
 
 export const OQA = () => {
@@ -35,6 +37,9 @@ export const OQA = () => {
               {
                 memory.latitude !== undefined ? (
                   <div className="slideMeta">
+                    { memory.takenDate ? (
+                      <p>{ moment.utc(memory.takenDate).format('MMMM Do YYYY, h:mm:ss a') }</p>
+                    ): "" }
                     <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
                   </div>
                 ) : ""

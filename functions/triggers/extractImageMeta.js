@@ -37,11 +37,15 @@ exports.extractImageMeta = async ( object ) => {
     let longitude = metadata.Properties["exif:GPSLongitude"];
     let longRef = metadata.Properties["exif:GPSLongitudeRef"];
     let originalDate = metadata.Properties["exif:DateTimeOriginal"];
+    let dateCreate = metadata.Properties["date:create"];
     let updatedMetadata = {};
-    if ( originalDate !== undefined ){
-      const takenDate = new Date(originalDate.trim().replace(/(\d+):(\d+):(\d+) /, "$1/$2/$3 ")).toISOString();
+    let takenDate = ( originalDate !== undefined ) ? originalDate : ( dateCreate !== undefined ) ? dateCreate : null;
+    if ( takenDate !== null ){
+      takenDate = new Date(takenDate.trim().replace(/(\d+):(\d+):(\d+) /, "$1/$2/$3 ")).toISOString();
       updatedMetadata = { takenDate };
     }
+    console.log(fileName);
+    console.log(metadata);
     if(latitude !== undefined && longitude !== undefined){
       latitude = geoCalculate(latitude, latRef);
       longitude = geoCalculate(longitude, longRef);
