@@ -8,9 +8,13 @@ import {
   CardActions,
   Button
 } from '@material-ui/core';
+import CheckIcon from '@material-ui/icons/Check';
+import LoyaltyIcon from '@material-ui/icons/Loyalty';
+import './ImagePreviews.css';
 
-export const ImagePreviews = ({ info, setInfo, removeImage }) => {
+export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeImage, handleSelectClick }) => {
   const [ open, setOpen ] = useState(false);
+
   const [ currentFileName, setCurrentFileName ] = useState("");
   const [ title, setTitle ] = useState("");
   const [ comment, setComment ] = useState("");
@@ -48,21 +52,34 @@ export const ImagePreviews = ({ info, setInfo, removeImage }) => {
               const [filename, values] = item;
               const { src } = values;
               return (
-                <Grid key={index} item sm={3} xs={12}>
+                <Grid key={index} item md={3} sm={12} xs={12} className={ 
+                  selection[filename].select === true ? "previewContainer selected" : "previewContainer"
+                }>
                   <Card>
                     <CardMedia
                       component="img"
                       alt=""
                       image={src}
                       title=""
+                      onClick={ () => handleSelectClick(filename) }
                     />
                     <CardActions>
-                      <Button size="small" color="primary" onClick={ (e) => handleOpen(filename) }>
+                      <Button disabled={isUploading} size="small" color="primary" onClick={ (e) => handleOpen(filename) }>
                         { info[filename].title === "" && info[filename].comment === "" ? "Add" : "Edit" } Details
                       </Button>
-                      <Button size="small" color="secondary" onClick={ e => removeImage(index) }>
+                      <Button disabled={isUploading} size="small" color="secondary" onClick={ e => removeImage(index) }>
                         Delete
                       </Button>
+                      {
+                        selection[filename].select === true ? (
+                          <CheckIcon className="selectIcon"/>
+                        ) : ""
+                      }
+                      {
+                        info[filename].tags.length > 0 ? (
+                          <LoyaltyIcon className="tagIcon"/>
+                        ) : ""
+                      }
                     </CardActions>
                   </Card>
                 </Grid>

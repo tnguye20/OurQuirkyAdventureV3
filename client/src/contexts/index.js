@@ -8,6 +8,11 @@ import {
   MemoriesContextProvider,
   useMemoriesValue
 } from './memories-context'
+import {
+  UserContext,
+  UserContextProvider,
+  useUserValue
+} from './user-context'
 
 export {
   AuthContext,
@@ -15,5 +20,8 @@ export {
   useAuthValue,
   MemoriesContext,
   MemoriesContextProvider,
-  useMemoriesValue
+  useMemoriesValue,
+  UserContext,
+  UserContextProvider,
+  useUserValue,
 }

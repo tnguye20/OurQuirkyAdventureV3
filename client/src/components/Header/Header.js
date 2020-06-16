@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { useHistory, useLocation } from 'react-router-dom';
 import {
   makeStyles,
   Button,
@@ -15,6 +15,7 @@ import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
 import AppsIcon from '@material-ui/icons/Apps';
 import MenuIcon from '@material-ui/icons/Menu';
+import FilterIcon from '@material-ui/icons/Filter';
 import './Header.css';
 
 const useStyles = makeStyles(theme => ({
@@ -35,6 +36,8 @@ const useStyles = makeStyles(theme => ({
 
 export const Header = () => {
   const history = useHistory();
+  const location = useLocation();
+  const { pathname } = location;
   const classes = useStyles();
   const [ open, setOpen ] = useState(false);
 
@@ -51,10 +54,18 @@ export const Header = () => {
           <ListItemText primary="Upload" />
         </ListItem>
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push("/")  } }>
+        <ListItem button onClick={ e => { setOpen(false); history.push("/slide")  } }>
           <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Slideshow" />
         </ListItem>
+        {
+          pathname === "/slide" ? (
+            <ListItem button onClick={ e => { alert("Please filter") } } className="subItem">
+              <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
+              <ListItemText primary="Filter Memories" />
+            </ListItem>
+          ) : ""
+        }
         <Divider />
         <ListItem button onClick={ e => { setOpen(false); history.push("/grid")  } }>
           <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>

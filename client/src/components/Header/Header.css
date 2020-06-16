@@ -6,3 +6,7 @@
   top: 0;
   left: 0;
 }
+
+.subItem {
+  padding-left: 35px !important;
+}

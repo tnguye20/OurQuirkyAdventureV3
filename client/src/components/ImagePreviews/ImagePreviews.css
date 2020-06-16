@@ -1,0 +1,20 @@
+.previewContainer {
+    position: relative; 
+}
+
+.previewContainer.selected > div {
+    box-shadow: -5px 7px 5px 0px rgba(0,0,0,0.75);
+}
+
+.selectIcon {
+    position: absolute;
+    top: 5%;
+    right: 4%; 
+    color: teal;
+}
+
+.tagIcon {
+    position: absolute;
+    right: 4%; 
+    color: teal;
+}

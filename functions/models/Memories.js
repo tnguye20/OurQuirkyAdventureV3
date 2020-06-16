@@ -10,7 +10,8 @@ exports.makeMemory = ({
   size,
   category,
   extension,
-  name
+  name,
+  tags = []
 }) => {
   if(title.length === 0){
     title = "One of my best memories with you";
@@ -44,6 +45,7 @@ exports.makeMemory = ({
     size,
     category,
     extension,
-    name
+    name,
+    tags
   })
 }

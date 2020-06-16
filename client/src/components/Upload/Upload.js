@@ -1,13 +1,17 @@
 import React, { useState } from 'react';
 import { storage, db } from '../../utils/firebase';
 import { ImagePreviews } from '../ImagePreviews';
-import { useAuthValue } from '../../contexts';
+import { useAuthValue, useUserValue } from '../../contexts';
 import { FILE_FORMATS } from '../../constants/files';
 import { getImageSource } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import SaveIcon from '@material-ui/icons/Save';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
+import AddIcon from '@material-ui/icons/Add';
+import RemoveIcon from '@material-ui/icons/Remove';
 import './Upload.css';
+
+import { SelectionModal } from '../SelectionModal';
 
 import {
   Container,
@@ -33,20 +37,48 @@ export const Upload = () => {
 
   const history = useHistory();
   const { authUser } = useAuthValue();
-  // const { uid, tokenId } = authUser;
   const { uid } = authUser;
+  // const { uid, tokenId } = authUser;
+  const { user } = useUserValue();
+  const { collections } = user;
   const [ files, setFiles ] = useState([]);
   const [ info, setInfo ] = useState({});
   const [ isUploading, setIsUploading ] = useState(false);
+  const [ isSelecting, setIsSelecting ] = useState(false);
+  const [ selection, setSelection ] = useState({});
+  const [ openSelectionModal, setOpenSelectionModal ] = useState(false);
 
   const removeImage = (index) => {
+    const tmpSelection = {...selection};
     const tmpFiles = [...files];
     const tmpInfo = {...info};
     const filename = tmpFiles[index].name;
     tmpFiles.splice(index, 1);
     delete tmpInfo[filename];
+    delete tmpSelection[filename];
     setFiles(tmpFiles);
     setInfo(tmpInfo);
+    setSelection(tmpSelection);
+  }
+
+  const handleSelectClick = ( name ) => {
+    const tmpSelection = {...selection};
+    tmpSelection[name].select = !tmpSelection[name].select;
+    setSelection(tmpSelection);
+    const selecting = Object.values(tmpSelection).reduce( (result, value) => {
+      const { select } = value;
+      return result || select;
+    }, false);
+    setIsSelecting(selecting);
+  }
+
+  const resetSelection = () => {
+    let tmpSelection = {...selection};
+    Object.keys(tmpSelection).forEach( key => {
+      tmpSelection[key].select = false;
+    });
+    setIsSelecting(false);
+    setSelection(tmpSelection);
   }
 
   const handleSubmit = async (e) => {
@@ -66,7 +98,7 @@ export const Upload = () => {
           const url = await snapshot.ref.getDownloadURL();
           const metadata = await snapshot.ref.getMetadata();
           const { timeCreated } = metadata;
-          const { title, comment } = info[name];
+          const { title, comment, tags } = info[name];
           info[name] = {
             user: uid,
             title,
@@ -79,6 +111,7 @@ export const Upload = () => {
             name: newName,
             takenDate: new Date().toISOString(),
             comments: [],
+            tags
           };
           if (title.length === 0 ){
             info[name].title = "One of my best memories with you";
@@ -120,6 +153,7 @@ export const Upload = () => {
 
   const handleFilesChange = async (e) => {
     setInfo({});
+    setSelection({});
     setFiles([]);
     setIsUploading(true);
     const files = e.target.files;
@@ -127,17 +161,23 @@ export const Upload = () => {
       if (files.length > 0){
         let imageSrcsArr = [];
         let newInfo = {};
+        let newSelection = {};
         for (const file of files){
           const { type, name } = file;
           if(FILE_FORMATS.indexOf(type) !== -1){
             newInfo[name] = {
               src: "",
               title: "",
-              comment: ""
+              comment: "",
+              tags: []
             };
+            newSelection[name] = {
+              select: false
+            }
             imageSrcsArr.push( getImageSource(file) );
           }
         }
+        setSelection(newSelection);
         imageSrcsArr = await Promise.all(imageSrcsArr);
         const infoKeys = Object.keys(newInfo);
         imageSrcsArr.forEach( ( src, index ) => {
@@ -174,15 +214,30 @@ export const Upload = () => {
                   <Button disabled={isUploading} className={classes.button} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
                     Upload
                   </Button>
+                  {
+                    isSelecting ? (
+                      <>
+                        <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="primary" size="medium" startIcon={<AddIcon />} onClick={ () => { setOpenSelectionModal(true) }}>
+                          Tag
+                        </Button>
+                        <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="secondary" size="medium" startIcon={<RemoveIcon />} onClick={ () => { resetSelection() }}>
+                          Reset
+                        </Button>
+                      </>
+                    ) : ""
+                  }
                 </form>
               )
             }
         </Grid>
+
+        <SelectionModal uid={uid} isUploading={isUploading} selection={selection} resetSelection={resetSelection} collections={collections} info={info} setInfo={setInfo} open={openSelectionModal} handleClose={ () => { setOpenSelectionModal(false) } }/>
+
       </Container>
       <br />
       <br />
       {
-        Object.values(info).length > 0 ? ( <ImagePreviews isUploading={isUploading} info={info} setInfo={setInfo} removeImage={removeImage} /> ) : ""
+        Object.values(info).length > 0 ? ( <ImagePreviews isUploading={isUploading} info={info} setInfo={setInfo} removeImage={removeImage} selection={selection} handleSelectClick={handleSelectClick} /> ) : ""
       }
     </>
   )

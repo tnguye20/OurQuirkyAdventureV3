@@ -4,10 +4,10 @@ import { useMemories } from '../hooks/useMemories';
 export const MemoriesContext = createContext();
 
 export const MemoriesContextProvider = ({ children }) => {
-  const { memories, setMemories } = useMemories();
+  const { memories, setMemories, filterBy, setFilterBy } = useMemories();
 
   return (
-    <MemoriesContext.Provider value={ { memories, setMemories } }>
+    <MemoriesContext.Provider value={ { memories, setMemories, filterBy, setFilterBy } }>
       { children }
     </MemoriesContext.Provider>
   )

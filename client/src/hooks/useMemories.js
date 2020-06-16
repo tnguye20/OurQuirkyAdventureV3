@@ -5,6 +5,7 @@ import { useAuthValue } from '../contexts/';
 export const useMemories = () => {
   const { authUser } = useAuthValue();
   const [ memories, setMemories ] = useState([]);
+  const [ filterBy, setFilterBy ] = useState(null);
 
   useEffect(() => {
     let unsubscribe = db
@@ -20,15 +21,16 @@ export const useMemories = () => {
         })
         return filtered;
       }, []);
-
       setMemories(snapshotMemories);
     });
 
     return () => unsubscribe();
-  }, [authUser.uid])
+  }, [authUser.uid, filterBy])
 
   return {
     memories,
-    setMemories
+    setMemories,
+    filterBy,
+    setFilterBy
   }
 }
