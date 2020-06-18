@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory, useLocation } from 'react-router-dom';
+import { useFilterValue } from '../../contexts';
 import {
   makeStyles,
   Button,
@@ -13,6 +14,7 @@ import {
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
 import PhotoAlbumIcon from '@material-ui/icons/PhotoAlbum';
+import ClearAllIcon from '@material-ui/icons/ClearAll';
 import AppsIcon from '@material-ui/icons/Apps';
 import MenuIcon from '@material-ui/icons/Menu';
 import FilterIcon from '@material-ui/icons/Filter';
@@ -39,6 +41,7 @@ export const Header = () => {
   const location = useLocation();
   const { pathname } = location;
   const classes = useStyles();
+  const { setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const [ open, setOpen ] = useState(false);
 
   const handleSignOut = (e) => {
@@ -60,10 +63,20 @@ export const Header = () => {
         </ListItem>
         {
           pathname === "/slide" ? (
-            <ListItem button className="subItem">
-              <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
-              <ListItemText primary="Filter Memories" />
-            </ListItem>
+            <>
+              <ListItem button className="subItem" onClick={ () => { setOpenFilter(true); setOpen(false) } }>
+                <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
+                <ListItemText primary="Filter Memories" />
+              </ListItem>
+              {
+               filterCriteria.size > 0 ? (
+                <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
+                  <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
+                  <ListItemText primary="Reset Filters" />
+                </ListItem>
+               ) : ""
+              }
+            </>
           ) : ""
         }
         <Divider />
