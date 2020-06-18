@@ -3,7 +3,7 @@ import {
   BrowserRouter as Router,
   Switch,
 } from 'react-router-dom';
-import { AuthProvider, MemoriesContextProvider, UserContextProvider } from './contexts';
+import { AuthProvider, MemoriesContextProvider, UserContextProvider, FilterContextProvider } from './contexts';
 import * as ROUTES from './constants/routes';
 
 import { OQA } from './components/OQA';
@@ -45,8 +45,8 @@ export const App = () => {
 
             <AuthRoute path={ ROUTES.UPLOAD }>
               <UserContextProvider>
-                <Header />
-                <Upload />
+                  <Header />
+                  <Upload />
               </UserContextProvider>
             </AuthRoute>
 
@@ -57,8 +57,10 @@ export const App = () => {
             <AuthRoute exact path={ ROUTES.SLIDE }>
               <MemoriesContextProvider>
                 <UserContextProvider>
-                  <Header />
-                  <OQA />
+                  <FilterContextProvider>
+                    <Header />
+                    <OQA />
+                  </FilterContextProvider>
                 </UserContextProvider>
               </MemoriesContextProvider>
             </AuthRoute>
@@ -66,8 +68,10 @@ export const App = () => {
             <AuthRoute exact path={ ROUTES.ROOT }>
               <MemoriesContextProvider>
                 <UserContextProvider>
-                  <Header />
-                  <OQA />
+                  <FilterContextProvider>
+                    <Header />
+                    <OQA />
+                  </FilterContextProvider>
                 </UserContextProvider>
               </MemoriesContextProvider>
             </AuthRoute>

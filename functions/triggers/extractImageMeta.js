@@ -41,8 +41,11 @@ exports.extractImageMeta = async ( object ) => {
     let updatedMetadata = {};
     let takenDate = ( originalDate !== undefined ) ? originalDate : ( dateCreate !== undefined ) ? dateCreate : null;
     if ( takenDate !== null ){
-      takenDate = new Date(takenDate.trim().replace(/(\d+):(\d+):(\d+) /, "$1/$2/$3 ")).toISOString();
-      updatedMetadata = { takenDate };
+      const d = new Date(takenDate.trim().replace(/(\d+):(\d+):(\d+) /, "$1/$2/$3 "));
+      takenDate = d.toISOString();
+      const takenYear = `${d.getFullYear()}`;
+      const takenMonth = `${d.getMonth() + 1}`;
+      updatedMetadata = { takenDate, takenYear, takenMonth };
     }
     console.log(fileName);
     console.log(metadata);

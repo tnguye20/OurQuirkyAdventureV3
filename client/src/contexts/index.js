@@ -13,6 +13,11 @@ import {
   UserContextProvider,
   useUserValue
 } from './user-context'
+import {
+  FilterContext,
+  FilterContextProvider,
+  useFilterValue
+} from './filter-context'
 
 export {
   AuthContext,
@@ -24,4 +29,7 @@ export {
   UserContext,
   UserContextProvider,
   useUserValue,
+  FilterContext,
+  FilterContextProvider,
+  useFilterValue,
 }

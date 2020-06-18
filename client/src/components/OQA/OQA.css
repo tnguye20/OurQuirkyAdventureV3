@@ -40,6 +40,6 @@
   background-color: rgba(0, 0, 0, 0.5);
 }
 
-.aws-btn {
-  --loader-bar-color: transparent;
+.aws-btn, .awssld {
+  --loader-bar-color: transparent !important;
 }

@@ -60,7 +60,7 @@ export const Header = () => {
         </ListItem>
         {
           pathname === "/slide" ? (
-            <ListItem button onClick={ e => { alert("Please filter") } } className="subItem">
+            <ListItem button className="subItem">
               <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
               <ListItemText primary="Filter Memories" />
             </ListItem>
