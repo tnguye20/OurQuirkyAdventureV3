@@ -84,6 +84,24 @@ export const Header = () => {
           <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Grid Mode" />
         </ListItem>
+        {
+          pathname !== "/upload" && pathname !== "/slide" && pathname !== "/" ? (
+            <>
+              <ListItem button className="subItem" onClick={ () => { setOpenFilter(true); setOpen(false) } }>
+                <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
+                <ListItemText primary="Filter Memories" />
+              </ListItem>
+              {
+               filterCriteria.size > 0 ? (
+                <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
+                  <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
+                  <ListItemText primary="Reset Filters" />
+                </ListItem>
+               ) : ""
+              }
+            </>
+          ) : ""
+        }
         <Divider />
         <ListItem button onClick={handleSignOut}>
           <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>

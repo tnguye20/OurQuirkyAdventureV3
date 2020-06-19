@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useMemoriesValue } from '../../contexts';
+import { useFilterValue, useMemoriesValue } from '../../contexts';
 
 import { db } from '../../utils/firebase';
 
@@ -20,12 +20,19 @@ import FavoriteIcon from '@material-ui/icons/Favorite';
 import ChatBubbleIcon from '@material-ui/icons/ChatBubble';
 
 import { MemoryTitleEdit } from '../MemoryTitleEdit';
+import { Filter } from '../Filter';
+
+import { memFilter } from '../../utils';
 
 export const GridMode = () => {
   const [ currentId, setCurrentId ] = useState(null);
   const [ currentTitle, setCurrentTitle ] = useState("");
   const [ anchorEl, setAnchorEl ] = useState(null);
   const [ titleEdit, setTitleEdit ] = useState(false);
+  const { openFilter, setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
+  const { memories } = useMemoriesValue();
+
+  const filtered =  memFilter(memories, filterCriteria);
 
   const openAnchorEl = (e, id, title) => {
     setCurrentId(id);
@@ -58,13 +65,12 @@ export const GridMode = () => {
     setTitleEdit(false);
   }
 
-  const { memories } = useMemoriesValue();
   return (
     <Container maxWidth="lg">
       <br /><br />
       <Grid container spacing={2} direction="row">
         {
-          memories.length > 0 ? memories.map( (item, index) => {
+          filtered.length > 0 ? filtered.map( (item, index) => {
             const { id, url, title, comments, city, state } = item;
             return (
               <Grid key={index} item md={6} sm={12} xs={12}>
@@ -115,6 +121,7 @@ export const GridMode = () => {
         <MenuItem onClick={ removeMemory } >Remove Memory</MenuItem>
       </Menu>
       <MemoryTitleEdit title={currentTitle} setTitle={setCurrentTitle} handleEditTitle={handleEditTitle} open={titleEdit} handleClose={ () => setTitleEdit(false) } />
+      <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
     </Container>
   )
 };
