@@ -37,16 +37,20 @@ export const App = () => {
             <AuthRoute path={ ROUTES.GRID }>
               <MemoriesContextProvider>
                 <UserContextProvider>
-                  <Header />
-                  <GridMode />
+                  <FilterContextProvider>
+                    <Header />
+                    <GridMode />
+                  </FilterContextProvider>
                 </UserContextProvider>
               </MemoriesContextProvider>
             </AuthRoute>
 
             <AuthRoute path={ ROUTES.UPLOAD }>
               <UserContextProvider>
+                <FilterContextProvider>
                   <Header />
                   <Upload />
+                </FilterContextProvider>
               </UserContextProvider>
             </AuthRoute>
 

@@ -67,7 +67,7 @@ export const GridMode = () => {
           memories.length > 0 ? memories.map( (item, index) => {
             const { id, url, title, comments, city, state } = item;
             return (
-              <Grid item md={6} sm={12} xs={12}>
+              <Grid key={index} item md={6} sm={12} xs={12}>
                 <Card>
                   <CardHeader
                    avatar={

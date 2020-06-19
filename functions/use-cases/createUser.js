@@ -31,10 +31,10 @@ module.exports.makeCreateUser = ( {dba, auth} ) => {
         newUser.token = token;
       }
       return newUser;
-      
+
     } catch (e) {
       console.log(e);
-      return { 
+      return {
         error: "Insufiicient User Data"
       }
     }

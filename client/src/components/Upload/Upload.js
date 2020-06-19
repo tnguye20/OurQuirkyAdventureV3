@@ -7,8 +7,14 @@ import { getImageSource } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import SaveIcon from '@material-ui/icons/Save';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
-import AddIcon from '@material-ui/icons/Add';
-import RemoveIcon from '@material-ui/icons/Remove';
+// import AddIcon from '@material-ui/icons/Add';
+// import RemoveIcon from '@material-ui/icons/Remove';
+import PhotoSizeSelectActualIcon from '@material-ui/icons/PhotoSizeSelectActual';
+import LabelIcon from '@material-ui/icons/Label';
+import SpeedDial from '@material-ui/lab/SpeedDial';
+import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
+import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+
 import './Upload.css';
 
 import { SelectionModal } from '../SelectionModal';
@@ -26,10 +32,27 @@ import {
 const useStyles = makeStyles((theme) => ({
   button: {
       margin: theme.spacing(1),
-    },
+  },
+  hidden: {
+    display: "none"
+  },
   progress: {
     width: "100%"
-  }
+  },
+  speedDial: {
+    position: 'fixed',
+    '&button': {
+      backgroundColor: "teal"
+    },
+    '&.MuiSpeedDial-directionUp, &.MuiSpeedDial-directionLeft': {
+          bottom: theme.spacing(2),
+          right: theme.spacing(2),
+        },
+    '&.MuiSpeedDial-directionDown, &.MuiSpeedDial-directionRight': {
+          top: theme.spacing(2),
+          left: theme.spacing(2),
+        },
+  },
 }));
 
 export const Upload = () => {
@@ -47,6 +70,7 @@ export const Upload = () => {
   const [ isSelecting, setIsSelecting ] = useState(false);
   const [ selection, setSelection ] = useState({});
   const [ openSelectionModal, setOpenSelectionModal ] = useState(false);
+  const [ openDial, setOpenDial ] = useState(false);
 
   const removeImage = (index) => {
     const tmpSelection = {...selection};
@@ -192,6 +216,18 @@ export const Upload = () => {
     }
   }
 
+  const clickSelect = () => {
+    const selectBtn = document.querySelector("#selectBtn");
+    if ( selectBtn !== null ) selectBtn.click();
+    setOpenDial(false);
+  }
+
+  const clickUpload = () => {
+    const uploadBtn = document.querySelector("#uploadBtn");
+    if ( uploadBtn !== null ) uploadBtn.click();
+    setOpenDial(false);
+  }
+
   return (
     <>
       <Container maxWidth="md">
@@ -207,38 +243,76 @@ export const Upload = () => {
                 <form onSubmit={handleSubmit} encType="multipart/form-data" id="uploadForm">
                   <input id="fileUpload" type="file" name="memories[]" multiple onChange={handleFilesChange}/>
                   <label htmlFor="fileUpload">
-                    <Button disabled={isUploading} className={classes.button} variant="contained" color="primary" component="span" size="medium" startIcon={<CloudUploadIcon />}>
+                    <Button id="selectBtn" disabled={isUploading} className={classes.button, classes.hidden} variant="contained" color="primary" component="span" size="medium" startIcon={<CloudUploadIcon />}>
                       Select Memories
                     </Button>
                   </label>
-                  <Button disabled={isUploading} className={classes.button} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
+                  <Button id="uploadBtn" disabled={isUploading} className={classes.button, classes.hidden} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
                     Upload
                   </Button>
                   {
-                    isSelecting ? (
-                      <>
-                        <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="primary" size="medium" startIcon={<AddIcon />} onClick={ () => { setOpenSelectionModal(true) }}>
-                          Tag
-                        </Button>
-                        <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="secondary" size="medium" startIcon={<RemoveIcon />} onClick={ () => { resetSelection() }}>
-                          Reset
-                        </Button>
-                      </>
-                    ) : ""
+                    // isSelecting ? (
+                    //   <>
+                    //     <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="primary" size="medium" startIcon={<AddIcon />} onClick={ () => { setOpenSelectionModal(true) }}>
+                    //       Tag
+                    //     </Button>
+                    //     <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="secondary" size="medium" startIcon={<RemoveIcon />} onClick={ () => { resetSelection() }}>
+                    //       Reset
+                    //     </Button>
+                    //   </>
+                    // ) : ""
                   }
                 </form>
               )
             }
         </Grid>
 
-        <SelectionModal uid={uid} isUploading={isUploading} selection={selection} resetSelection={resetSelection} collections={collections} info={info} setInfo={setInfo} open={openSelectionModal} handleClose={ () => { setOpenSelectionModal(false) } }/>
+        <SelectionModal isUploading={isUploading} selection={selection} resetSelection={resetSelection} collections={collections} info={info} setInfo={setInfo} open={openSelectionModal} handleClose={ () => { setOpenDial(false); setOpenSelectionModal(false); } }/>
 
       </Container>
       <br />
       <br />
       {
-        Object.values(info).length > 0 ? ( <ImagePreviews isUploading={isUploading} info={info} setInfo={setInfo} removeImage={removeImage} selection={selection} handleSelectClick={handleSelectClick} /> ) : ""
+        Object.values(info).length > 0 ? ( <ImagePreviews resetSelection={resetSelection} collections={collections} isUploading={isUploading} info={info} setInfo={setInfo} removeImage={removeImage} selection={selection} handleSelectClick={handleSelectClick} /> ) : ""
       }
+
+      <SpeedDial
+        ariaLabel="SpeedDial example"
+        className={classes.speedDial}
+        hidden={false}
+        icon={<SpeedDialIcon />}
+        onClose={() => setOpenDial(false)}
+        onOpen={() => setOpenDial(true)}
+        open={openDial}
+        direction={"up"}
+      >
+        <SpeedDialAction
+          icon={<PhotoSizeSelectActualIcon />}
+          tooltipTitle={"Select Memories"}
+          tooltipOpen
+          onClick={ clickSelect }
+        />
+        <SpeedDialAction
+          icon={<LabelIcon />}
+          tooltipTitle={"Tag"}
+          tooltipOpen
+          onClick={ () => { if (isSelecting) setOpenSelectionModal(true); setOpenDial(false); } }
+        />
+        {
+            // <SpeedDialAction
+            //   icon={<RemoveIcon />}
+            //   tooltipTitle={"Remove Selection"}
+            //   tooltipOpen
+            //   onClick={ () => { if (isSelecting) resetSelection() } }
+            // />
+        }
+        <SpeedDialAction
+          icon={<CloudUploadIcon />}
+          tooltipTitle={"Upload"}
+          tooltipOpen
+          onClick={ clickUpload }
+        />
+      </SpeedDial>
     </>
   )
 }

@@ -12,9 +12,13 @@ import CheckIcon from '@material-ui/icons/Check';
 import LoyaltyIcon from '@material-ui/icons/Loyalty';
 import './ImagePreviews.css';
 
-export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeImage, handleSelectClick }) => {
+import { SelectionModal } from '../SelectionModal';
+
+export const ImagePreviews = ({ resetSelection, collections, isUploading, info, selection, setInfo, removeImage, handleSelectClick }) => {
   const [ open, setOpen ] = useState(false);
 
+  const [ openSelectionModal, setOpenSelectionModal ] = useState(false);
+  const [ selectedFile, setSelectedFile ] = useState("");
   const [ currentFileName, setCurrentFileName ] = useState("");
   const [ title, setTitle ] = useState("");
   const [ comment, setComment ] = useState("");
@@ -52,7 +56,7 @@ export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeIma
               const [filename, values] = item;
               const { src } = values;
               return (
-                <Grid key={index} item md={3} sm={12} xs={12} className={ 
+                <Grid key={index} item md={3} sm={12} xs={12} className={
                   selection[filename].select === true ? "previewContainer selected" : "previewContainer"
                 }>
                   <Card>
@@ -61,7 +65,7 @@ export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeIma
                       alt=""
                       image={src}
                       title=""
-                      onClick={ () => handleSelectClick(filename) }
+                      onClick={ () => { if (!isUploading) handleSelectClick(filename) } }
                     />
                     <CardActions>
                       <Button disabled={isUploading} size="small" color="primary" onClick={ (e) => handleOpen(filename) }>
@@ -77,7 +81,7 @@ export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeIma
                       }
                       {
                         info[filename].tags.length > 0 ? (
-                          <LoyaltyIcon className="tagIcon"/>
+                          <LoyaltyIcon className="tagIcon" onClick={ () => {setSelectedFile(filename); setOpenSelectionModal(true)} }/>
                         ) : ""
                       }
                     </CardActions>
@@ -89,6 +93,7 @@ export const ImagePreviews = ({ isUploading, info, selection, setInfo, removeIma
         </Grid>
       </Container>
 
+      <SelectionModal isSingular={true} selectedFile={selectedFile} isUploading={isUploading} selection={selection} resetSelection={resetSelection} collections={collections} info={info} setInfo={setInfo} open={openSelectionModal} handleClose={ () => { setOpenSelectionModal(false); } }/>
       <MemoryDetails handleAddDetails={handleAddDetails} title={title} setTitle={setTitle} comment={comment} setComment={setComment} open={open} handleClose={handleClose} currentFileName={currentFileName} />
 
     </>

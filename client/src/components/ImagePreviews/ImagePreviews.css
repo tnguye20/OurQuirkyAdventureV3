@@ -1,5 +1,5 @@
 .previewContainer {
-    position: relative; 
+    position: relative;
 }
 
 .previewContainer.selected > div {
@@ -8,13 +8,13 @@
 
 .selectIcon {
     position: absolute;
-    top: 5%;
-    right: 4%; 
+    /* top: 5%; */
+    right: 15%;
     color: teal;
 }
 
 .tagIcon {
     position: absolute;
-    right: 4%; 
-    color: teal;
+    right: 4%;
+    color: lightseagreen;
 }

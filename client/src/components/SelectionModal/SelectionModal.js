@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useAuthValue } from '../../contexts';
 import { db } from '../../utils/firebase';
 import {
   Dialog,
@@ -13,7 +14,8 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
 export const SelectionModal = ({
-    uid,
+    isSingular,
+    selectedFile,
     isUploading,
     info,
     setInfo,
@@ -23,39 +25,54 @@ export const SelectionModal = ({
     open,
     handleClose,
 }) => {
+    const { authUser } = useAuthValue();
+    const { uid } = authUser;
     const [ value, setValue ] = useState([]);
 
-    const addToCollection = () => {
-        const tmpInfo = {...info};
-        Object.entries(selection).forEach( entry => {
-            const [k, v] = entry;
-            const { select } = v;
-            if (select === true) {
-                tmpInfo[k].tags = [...tmpInfo[k].tags, ...value];
-            }
-        });
+  useEffect( () => {
+    if(isSingular && info[selectedFile] !== undefined){
+      setValue(info[selectedFile].tags);
+    }
+  }, [info, selectedFile, isSingular]);
 
-        const newTags = value.filter( v => {
-            return collections.indexOf(v) === -1;
-        });
-        if(newTags.length > 0){
-            db.collection("users").doc(uid).update({
-                collections: [
-                    ...collections,
-                    ...newTags
-                ]
-            }).then( () => {
-                setInfo(tmpInfo);
-                setValue([]);
-                resetSelection();
-                handleClose();
-            })
-        } else {
-            setInfo(tmpInfo);
-            setValue([]);
-            resetSelection();
-            handleClose();
+    const addToCollection = () => {
+      const tmpInfo = {...info};
+
+      if(isSingular === true){
+        if(tmpInfo[selectedFile] !== undefined){
+          tmpInfo[selectedFile].tags = [ ...value];
         }
+      } else {
+        Object.entries(selection).forEach( entry => {
+          const [k, v] = entry;
+          const { select } = v;
+          if (select === true) {
+            tmpInfo[k].tags = [...tmpInfo[k].tags, ...value];
+          }
+        });
+      }
+
+      const newTags = value.filter( v => {
+        return collections.indexOf(v) === -1;
+      });
+      if(newTags.length > 0){
+        db.collection("users").doc(uid).update({
+          collections: [
+            ...collections,
+            ...newTags
+          ]
+        }).then( () => {
+          setInfo(tmpInfo);
+          setValue([]);
+          resetSelection();
+          handleClose();
+        })
+      } else {
+        setInfo(tmpInfo);
+        setValue([]);
+        resetSelection();
+        handleClose();
+      }
     }
 
     return(

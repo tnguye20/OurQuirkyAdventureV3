@@ -40,7 +40,6 @@ export const Header = () => {
   const history = useHistory();
   const location = useLocation();
   const { pathname } = location;
-  console.log(pathname);
   const classes = useStyles();
   const { setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const [ open, setOpen ] = useState(false);
@@ -63,7 +62,7 @@ export const Header = () => {
           <ListItemText primary="Slideshow" />
         </ListItem>
         {
-          pathname === "/slide" || pathname === "/" ? (
+          pathname !== "/upload" && pathname !== "/grid" ? (
             <>
               <ListItem button className="subItem" onClick={ () => { setOpenFilter(true); setOpen(false) } }>
                 <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
