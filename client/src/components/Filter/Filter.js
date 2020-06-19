@@ -31,13 +31,19 @@ export const Filter = ({
     const [ yValue, setYValue ] = useState([]);
 
     useEffect( () => {
-        if(filterCriteria.size === 0){
-            setValue([]);
-            setCValue([]);
-            setSValue([]);
-            setMValue([]);
-            setYValue([]);
-        }
+      if(filterCriteria.size === 0){
+          setValue([]);
+          setCValue([]);
+          setSValue([]);
+          setMValue([]);
+          setYValue([]);
+      } else {
+        if ( filterCriteria.has("tags") ) setValue(filterCriteria.get("tags"));
+        if ( filterCriteria.has("city") ) setCValue(filterCriteria.get("city"));
+        if ( filterCriteria.has("state") ) setSValue(filterCriteria.get("state"));
+        if ( filterCriteria.has("takenMonth") ) setMValue(filterCriteria.get("takenMonth"));
+        if ( filterCriteria.has("takenYear") ) setYValue(filterCriteria.get("takenYear"));
+      }
     },[filterCriteria])
 
     const aggregateFilters = () => {

@@ -5,7 +5,6 @@ export const FilterContext = createContext();
 export const FilterContextProvider = ({ children }) => {
     const [ openFilter, setOpenFilter ] = useState(false);
     const [ filterCriteria, setFilterCriteria ] = useState(new Map());
-    console.log(filterCriteria);
 
     return (
         <FilterContext.Provider value={ {
