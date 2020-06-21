@@ -32,6 +32,16 @@ exports.extractImageMeta = async ( object ) => {
     await storage.file(filePath).download({destination: tempLocalFile});
     const result = await spawn('identify', ['-verbose', tempLocalFile], {capture: ['stdout', 'stderr']});
     const metadata = imageMagickOutputToObject(result.stdout);
+    let width = 0;
+    let height = 0;
+    const geometryPattern = /^(\d+)x(\d+).*$/;
+    const match = geometryPattern.exec(metadata.Geometry.trim());
+    if( Array.isArray(match) ){
+      if ( match.length === 3 ){
+        width = Number(match[1]);
+        height = Number(match[2]);
+      }
+    }
     let latitude = metadata.Properties["exif:GPSLatitude"];
     let latRef = metadata.Properties["exif:GPSLatitudeRef"];
     let longitude = metadata.Properties["exif:GPSLongitude"];
@@ -47,6 +57,8 @@ exports.extractImageMeta = async ( object ) => {
       const takenMonth = `${d.getMonth() + 1}`;
       updatedMetadata = { takenDate, takenYear, takenMonth };
     }
+    updatedMetadata.width = width;
+    updatedMetadata.height = height;
     console.log(fileName);
     console.log(metadata);
     if(latitude !== undefined && longitude !== undefined){
