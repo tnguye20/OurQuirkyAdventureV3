@@ -29,7 +29,7 @@ export const useMemories = () => {
     unsubscribe = unsubscribe.onSnapshot( snapshot => {
       const snapshotMemories = snapshot.docs.reduce( (filtered, memory) => {
         const data = memory.data();
-        const { city, state, takenMonth, takenYear } = data;
+        const { isConverting , city, state, takenMonth, takenYear } = data;
 
         if(!_cities.has(city) && city !== "" && city !== undefined) _cities.set(city, {});
         if(!_states.has(state) && state !== "" && state !== undefined) _states.set(state, {});
@@ -37,10 +37,13 @@ export const useMemories = () => {
         if(!_takenYears.has(takenYear) && takenYear !== "" && takenYear !== undefined) _takenYears.set(takenYear, {});
         if(!_takenMonths.has(_takenMonths) && takenMonth !== "" && takenMonth !== undefined) _takenMonths.set(takenMonth, {});
 
-        filtered.push({
-          id: memory.id,
-          ...data
-        })
+        if ( isConverting !== true ) {
+          console.log(isConverting);
+          filtered.push({
+            id: memory.id,
+            ...data
+          })
+        }
         return filtered;
       }, []);
       setCities(Array.from(_cities.keys()).sort( (a,b) => a > b));

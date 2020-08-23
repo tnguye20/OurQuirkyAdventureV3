@@ -96,6 +96,17 @@ exports.extractImageMeta = async ( object ) => {
       return "Error Occured";
     }
   } else if (object.contentType.startsWith('video/')) {
+    const memories = await db.collection("memories").where("name", "==", fileName).get();
+    let memory = null;
+    memories.forEach( async memory =>{
+      if (memory.exists){
+        memory = db.collection("memories").doc(memory.id);
+        memory.update({
+          isConverting: true
+        })
+      }
+    });
+
     await storage.file(filePath).download({destination: tempLocalFile});
     const targetTempFile = `${os.tmpdir()}/${fileName.replace(/\.[^/.]+$/, '') + ".mp4"}`;
     const targetFilePath = filePath.replace(/\.[^/.]+$/, '') + ".mp4";
@@ -121,17 +132,15 @@ exports.extractImageMeta = async ( object ) => {
         },
         destination: targetFilePath
       });
-      const memories = await db.collection("memories").where("name", "==", fileName).get();
-      memories.forEach( async memory =>{
-        if (memory.exists){
-          await db.collection("memories").doc(memory.id).update({
+      if ( memory !== null ){
+          await memory.update({
             mimetype: "video/mp4",
             extension: "mp4",
             name: targetFilePath.split("/").pop(),
-            url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token)
+            url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
+            isConverting: false
           });
-        }
-      })
+      }
       fs.unlinkSync(tempLocalFile);
       fs.unlinkSync(targetTempFile);
       storage.file(filePath).delete();
