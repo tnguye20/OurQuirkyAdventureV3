@@ -16,21 +16,16 @@ module.exports.makeCreateUser = ( {dba, auth} ) => {
         emailVerified = user.emailVerified;
       }
 
-      const newUser = {
-        id,
-        email,
-        emailVerified,
-        displaynName: userModel.getName(),
-        associations: userModel.getAssociations(),
-        collections: userModel.getCollections()
-      };
-      await dba.insertUser(newUser);
+      userModel.setID = id;
+      userModel.setEmail = email;
+      userModel.setIsVerified = isVerified;
+      await dba.insertUser(userModel.getData());
 
       if ( dbOnly !== true && id !== undefined ){
         const token = await user.getIdToken();
-        newUser.token = token;
+        userModel.setToken(token);
       }
-      return newUser;
+      return userModel.getData();
 
     } catch (e) {
       console.log(e);

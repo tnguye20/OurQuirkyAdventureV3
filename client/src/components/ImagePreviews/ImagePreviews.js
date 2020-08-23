@@ -65,7 +65,7 @@ export const ImagePreviews = ({ resetSelection, collections, isUploading, info, 
                       alt=""
                       image={src}
                       title=""
-                      onClick={ () => { if (!isUploading) handleSelectClick(filename) } }
+                      onClick={ () => { if (!isUploading && info[filename].tags.length === 0) handleSelectClick(filename) } }
                     />
                     <CardActions>
                       <Button disabled={isUploading} size="small" color="primary" onClick={ (e) => handleOpen(filename) }>

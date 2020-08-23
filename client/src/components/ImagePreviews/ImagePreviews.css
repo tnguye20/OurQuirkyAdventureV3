@@ -4,6 +4,7 @@
 
 .previewContainer.selected > div {
     box-shadow: -5px 7px 5px 0px rgba(0,0,0,0.75);
+    border: purple solid 1px;
 }
 
 .selectIcon {

@@ -8,7 +8,7 @@ import { useHistory } from 'react-router-dom';
 import SaveIcon from '@material-ui/icons/Save';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
 // import AddIcon from '@material-ui/icons/Add';
-// import RemoveIcon from '@material-ui/icons/Remove';
+import RemoveIcon from '@material-ui/icons/Remove';
 import PhotoSizeSelectActualIcon from '@material-ui/icons/PhotoSizeSelectActual';
 import LabelIcon from '@material-ui/icons/Label';
 import SpeedDial from '@material-ui/lab/SpeedDial';
@@ -292,26 +292,36 @@ export const Upload = () => {
           tooltipOpen
           onClick={ clickSelect }
         />
-        <SpeedDialAction
-          icon={<LabelIcon />}
-          tooltipTitle={"Tag"}
-          tooltipOpen
-          onClick={ () => { if (isSelecting) setOpenSelectionModal(true); setOpenDial(false); } }
-        />
         {
-            // <SpeedDialAction
-            //   icon={<RemoveIcon />}
-            //   tooltipTitle={"Remove Selection"}
-            //   tooltipOpen
-            //   onClick={ () => { if (isSelecting) resetSelection() } }
-            // />
+          isSelecting ? (
+            <SpeedDialAction
+              icon={<LabelIcon />}
+              tooltipTitle={"Tag"}
+              tooltipOpen
+              onClick={ () => { setOpenSelectionModal(true); setOpenDial(false); } }
+            />
+          ) : ""
         }
-        <SpeedDialAction
-          icon={<CloudUploadIcon />}
-          tooltipTitle={"Upload"}
-          tooltipOpen
-          onClick={ clickUpload }
-        />
+        {
+          isSelecting ? (
+            <SpeedDialAction
+              icon={<RemoveIcon />}
+              tooltipTitle={"Remove Selection"}
+              tooltipOpen
+              onClick={ resetSelection }
+            />
+          ) : ""
+        }
+        {
+          files.length > 0 ? (
+            <SpeedDialAction
+              icon={<CloudUploadIcon />}
+              tooltipTitle={"Upload"}
+              tooltipOpen
+              onClick={ clickUpload }
+            />
+          ) : ""
+        }
       </SpeedDial>
     </>
   )
