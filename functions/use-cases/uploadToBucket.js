@@ -30,7 +30,7 @@ exports.makeUploadToBucket = ({ storage, Jimp, dba, uuid, makeMemory }) => {
                 const escapedPath = fullPath.replace(/\//g, "%2F");
                 const { title, comment } = info[index];
                 const comments = [comment];
-                dba.insertMemory(makeMemory({
+                return dba.insertMemory(makeMemory({
                   user: user.uid,
                   url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
                   uploadTime: isoString,
