@@ -54,18 +54,21 @@ export const ImagePreviews = ({ resetSelection, collections, isUploading, info, 
           {
             Object.entries(info).map( (item, index) => {
               const [filename, values] = item;
-              const { src } = values;
+              const { src, category } = values;
               return (
                 <Grid key={index} item md={3} sm={12} xs={12} className={
                   selection[filename].select === true ? "previewContainer selected" : "previewContainer"
                 }>
-                  <Card>
+                <Card onClick={ () => { if (!isUploading && info[filename].tags.length === 0) handleSelectClick(filename) } }>
                     <CardMedia
-                      component="img"
-                      alt=""
-                      image={src}
+                      component={ category }
+                      alt={ category }
+                      src={src}
                       title=""
-                      onClick={ () => { if (!isUploading && info[filename].tags.length === 0) handleSelectClick(filename) } }
+                      controls
+                      autoPlay
+                      playsInline
+                      muted
                     />
                     <CardActions>
                       <Button disabled={isUploading} size="small" color="primary" onClick={ (e) => handleOpen(filename) }>

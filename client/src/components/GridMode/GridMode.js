@@ -71,7 +71,7 @@ export const GridMode = () => {
       <Grid container spacing={2} direction="row">
         {
           filtered.length > 0 ? filtered.map( (item, index) => {
-            const { id, url, title, comments, city, state } = item;
+            const { id, url, title, comments, city, state, category } = item;
             return (
               <Grid key={index} item md={6} sm={12} xs={12}>
                 <Card>
@@ -90,10 +90,11 @@ export const GridMode = () => {
                     subheader={ city === undefined || city.length === 0 ? state : `${city}, ${state}` }
                   />
                   <CardMedia
-                    component="img"
+                    component= { category === "image" ? "img" : category }
                     alt=""
-                    image={url}
+                    src={url}
                     title=""
+                    controls
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">

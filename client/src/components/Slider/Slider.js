@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AwesomeSlider from 'react-awesome-slider';
 import CoreStyles from 'react-awesome-slider/src/core/styles.scss';
 import withAutoplay from 'react-awesome-slider/dist/autoplay';
@@ -33,6 +33,28 @@ export const Slider = ({
   setOpenFilter,
   setFilterCriteria,
 }) => {
+
+  useEffect( () => {
+    console.log("Slider useEffect");
+    const video = document.querySelector("video");
+    if (video !== null){
+      video.controls = true;
+      video.playsinline = true;
+      video.muted = true;
+      video.autoplay = true;
+      video.preload = "metadata";
+      video.loop = false;
+      video.play();
+      // setTimeout( () => {
+      //   console.log("Manually Push for Videos");
+      //   const nextBtn = document.querySelector(".awssld__next");
+      //   if (nextBtn !== null) nextBtn.click();
+      // }, 2000);
+    }
+
+    return () => { if (video !== null) video.pause() }
+  } )
+
   const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
 
   const filtered =  memFilter(memories, filterCriteria);

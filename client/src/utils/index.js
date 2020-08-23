@@ -15,3 +15,13 @@ export const getImageSource = (image) => {
     }
   })
 }
+
+export const getVideoSource = ( video ) => {
+  return new Promise( ( resolve, reject ) => {
+    try{
+      resolve(URL.createObjectURL(video));
+    } catch(err) {
+      reject(err);
+    }
+  })
+}

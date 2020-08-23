@@ -3,7 +3,7 @@ import { storage, db } from '../../utils/firebase';
 import { ImagePreviews } from '../ImagePreviews';
 import { useAuthValue, useUserValue } from '../../contexts';
 import { FILE_FORMATS } from '../../constants/files';
-import { getImageSource } from '../../utils';
+import { getImageSource, getVideoSource } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import SaveIcon from '@material-ui/icons/Save';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -181,15 +181,19 @@ export const Upload = () => {
     setFiles([]);
     setIsUploading(true);
     const files = e.target.files;
+    console.log(files);
     try{
       if (files.length > 0){
-        let imageSrcsArr = [];
+        let mediaSrcsArr = [];
         let newInfo = {};
         let newSelection = {};
         for (const file of files){
           const { type, name } = file;
+          const category = type.split("/")[0];
           if(FILE_FORMATS.indexOf(type) !== -1){
             newInfo[name] = {
+              category: category === "image" ? "img" : category,
+              type,
               src: "",
               title: "",
               comment: "",
@@ -198,15 +202,20 @@ export const Upload = () => {
             newSelection[name] = {
               select: false
             }
-            imageSrcsArr.push( getImageSource(file) );
+            if ( category === "image" ){
+              mediaSrcsArr.push( getImageSource(file) );
+            } else if (  category === "video" ) {
+              mediaSrcsArr.push( getVideoSource(file) );
+            }
           }
         }
         setSelection(newSelection);
-        imageSrcsArr = await Promise.all(imageSrcsArr);
+        mediaSrcsArr = await Promise.all(mediaSrcsArr);
         const infoKeys = Object.keys(newInfo);
-        imageSrcsArr.forEach( ( src, index ) => {
+        mediaSrcsArr.forEach( ( src, index ) => {
           newInfo[infoKeys[index]].src = src;
         } );
+        console.log(newInfo);
         setFiles(files);
         setInfo(newInfo);
         setIsUploading(false);

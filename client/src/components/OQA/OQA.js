@@ -5,7 +5,8 @@ import './OQA.css';
 
 import { NoSlide } from '../NoSlide';
 import { Filter } from '../Filter';
-import { Slider } from '../Slider';
+import { Slider } from '../SliderManual';
+// import { Slider } from '../Slider';
 
 export const OQA = () => {
   const { memories } = useMemoriesValue();
