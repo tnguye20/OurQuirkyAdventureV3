@@ -14,6 +14,7 @@ import { Signup } from './components/Signup/';
 import { Signout } from './components/Signout/';
 import { AuthRoute, UnAuthRoute } from './components/AuthRoute/';
 import { Header } from './components/Header';
+import { UserSettings } from './components/UserSettings';
 
 import { Landing } from './components/Landing';
 
@@ -56,6 +57,15 @@ export const App = () => {
 
             <AuthRoute path="/landing">
               <Landing />
+            </AuthRoute>
+
+            <AuthRoute path={ ROUTES.USER_SETTINGS }>
+              <UserContextProvider>
+                <FilterContextProvider>
+                  <Header />
+                  <UserSettings />
+                </FilterContextProvider>
+              </UserContextProvider>
             </AuthRoute>
 
             <AuthRoute exact path={ ROUTES.SLIDE }>

@@ -18,7 +18,10 @@ import ClearAllIcon from '@material-ui/icons/ClearAll';
 import AppsIcon from '@material-ui/icons/Apps';
 import MenuIcon from '@material-ui/icons/Menu';
 import FilterIcon from '@material-ui/icons/Filter';
+import SettingsIcon from '@material-ui/icons/Settings';
 import './Header.css';
+
+import * as ROUTES from '../../constants/routes';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -50,19 +53,19 @@ export const Header = () => {
   const MenuList = () => (
     <div className={ classes.list }>
       <List>
-        <ListItem button onClick={ e => { setOpen(false); history.push("/upload")  } }>
+        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.UPLOAD)  } }>
           <ListItemIcon><CloudUploadIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Upload" />
         </ListItem>
 
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push("/slide")  } }>
+        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.SLIDE)  } }>
           <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Slideshow" />
         </ListItem>
 
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push("/grid")  } }>
+        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.GRID)  } }>
           <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Grid Mode" />
         </ListItem>
@@ -86,6 +89,12 @@ export const Header = () => {
           </ListItem>
          ) : ""
         }
+
+        <Divider/>
+        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.USER_SETTINGS) } }>
+          <ListItemIcon><SettingsIcon htmlColor={"white"}/></ListItemIcon>
+          <ListItemText primary="User Settings" />
+        </ListItem>
 
         <Divider/>
 
