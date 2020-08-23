@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory, useLocation } from 'react-router-dom';
+import { useHistory } from 'react-router-dom';
 import { useFilterValue } from '../../contexts';
 import {
   makeStyles,
@@ -38,8 +38,6 @@ const useStyles = makeStyles(theme => ({
 
 export const Header = () => {
   const history = useHistory();
-  const location = useLocation();
-  const { pathname } = location;
   const classes = useStyles();
   const { setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const [ open, setOpen ] = useState(false);
@@ -56,57 +54,41 @@ export const Header = () => {
           <ListItemIcon><CloudUploadIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Upload" />
         </ListItem>
+
         <Divider />
         <ListItem button onClick={ e => { setOpen(false); history.push("/slide")  } }>
           <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Slideshow" />
         </ListItem>
-        {
-          pathname !== "/upload" && pathname !== "/grid" ? (
-            <>
-              <ListItem button className="subItem" onClick={ () => { setOpenFilter(true); setOpen(false) } }>
-                <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
-                <ListItemText primary="Filter Memories" />
-              </ListItem>
-              {
-               filterCriteria.size > 0 ? (
-                <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
-                  <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
-                  <ListItemText primary="Reset Filters" />
-                </ListItem>
-               ) : ""
-              }
-            </>
-          ) : ""
-        }
+
         <Divider />
         <ListItem button onClick={ e => { setOpen(false); history.push("/grid")  } }>
           <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Grid Mode" />
         </ListItem>
-        {
-          pathname !== "/upload" && pathname !== "/slide" && pathname !== "/" ? (
-            <>
-              <ListItem button className="subItem" onClick={ () => { setOpenFilter(true); setOpen(false) } }>
-                <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
-                <ListItemText primary="Filter Memories" />
-              </ListItem>
-              {
-               filterCriteria.size > 0 ? (
-                <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
-                  <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
-                  <ListItemText primary="Reset Filters" />
-                </ListItem>
-               ) : ""
-              }
-            </>
-          ) : ""
-        }
+
         <Divider />
         <ListItem button onClick={handleSignOut}>
           <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Sign Out" />
         </ListItem>
+
+        <Divider/>
+        <ListItem button onClick={ () => { setOpenFilter(true); setOpen(false) } }>
+          <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
+          <ListItemText primary="Filter Memories" />
+        </ListItem>
+        {
+         filterCriteria.size > 0 ? (
+          <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
+            <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="Reset Filters" />
+          </ListItem>
+         ) : ""
+        }
+
+        <Divider/>
+
       </List>
     </div>
   )
