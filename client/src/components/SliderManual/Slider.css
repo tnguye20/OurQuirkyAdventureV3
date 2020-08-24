@@ -12,6 +12,10 @@
   text-align: center;
 }
 
+video {
+	object-fit: contain !important;
+}
+
 .slideCaption > .slideMeta > p {
   font-size: 15px;
 }

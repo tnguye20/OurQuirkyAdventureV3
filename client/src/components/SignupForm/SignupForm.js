@@ -1,13 +1,13 @@
 import React, { useState } from 'react';
 import { useAuthValue } from '../../contexts';
-import { auth } from '../../utils/firebase';
+import { auth, db } from '../../utils/firebase';
 import {
   TextField,
   Button
 } from '@material-ui/core';
 
-import axios from 'axios';
-import { API_SIGNUP } from '../../constants/routes';
+// import axios from 'axios';
+// import { API_SIGNUP } from '../../constants/routes';
 
 export const SignupForm = () => {
   const { setAuthUser } = useAuthValue();
@@ -15,26 +15,31 @@ export const SignupForm = () => {
   const [ password, setPassword ] = useState("");
   const [ displayName, setDisplayName ] = useState("");
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    auth.createUserWithEmailAndPassword(email, password)
-      .then( ({ user }) => {
-        const { uid, emailVerified } = user;
-        console.log(uid);
-        console.log(displayName);
-        const formData = { id: uid, email, password, displayName, emailVerified, dbOnly: true };
-        axios.post( API_SIGNUP, formData )
-          .then( newUser => {
-            setAuthUser(user);
-          })
-          .catch( error => {
-            console.log(error.toJSON());
-          })
-        // db.collection("users").doc(uid).set({
-        //   displayName,
-        //   email
-        // });
-      })
+    try {
+      const { user } = await auth.createUserWithEmailAndPassword(email, password);
+      const { uid, emailVerified } = user;
+      console.log(uid);
+      console.log(displayName);
+      // const formData = { id: uid, email, password, displayName, emailVerified, dbOnly: true };
+      // axios.post( API_SIGNUP, formData )
+      //   .then( newUser => {
+      //     setAuthUser(user);
+      //   })
+      //   .catch( error => {
+      //     console.log(error.toJSON());
+      //   })
+      await db.collection("users").doc(uid).set({
+        displayName,
+        email,
+        associations: [],
+        collections: []
+      });
+      setAuthUser(user);
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   return (

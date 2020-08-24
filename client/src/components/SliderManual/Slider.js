@@ -65,7 +65,7 @@ export const Slider = ({
     // console.log("isVideo", isVideo);
     let timeout = null;
     if (isVideo){
-      video.controls = false;
+      video.controls = true;
       video.playsinline = true;
       video.playsInline = true;
       video.muted = true;
