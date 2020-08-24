@@ -38,7 +38,6 @@ export const useMemories = () => {
         if(!_takenMonths.has(_takenMonths) && takenMonth !== "" && takenMonth !== undefined) _takenMonths.set(takenMonth, {});
 
         if ( isConverting !== true ) {
-          console.log(isConverting);
           filtered.push({
             id: memory.id,
             ...data

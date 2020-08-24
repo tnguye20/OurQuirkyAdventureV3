@@ -71,19 +71,16 @@ export const Header = () => {
         </ListItem>
 
         <Divider />
-        <ListItem button onClick={handleSignOut}>
-          <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="Sign Out" />
-        </ListItem>
-
-        <Divider/>
         <ListItem button onClick={ () => { setOpenFilter(true); setOpen(false) } }>
           <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Filter Memories" />
         </ListItem>
         {
          filterCriteria.size > 0 ? (
-          <ListItem button className="subItem" onClick={ () => { setFilterCriteria(new Map()); setOpen(false) } }>
+           <ListItem button className="subItem" onClick={ () => {
+             setOpen(false);
+             setFilterCriteria(new Map());
+           } }>
             <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
             <ListItemText primary="Reset Filters" />
           </ListItem>
@@ -94,6 +91,12 @@ export const Header = () => {
         <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.USER_SETTINGS) } }>
           <ListItemIcon><SettingsIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="User Settings" />
+        </ListItem>
+
+        <Divider/>
+        <ListItem button onClick={handleSignOut}>
+          <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>
+          <ListItemText primary="Sign Out" />
         </ListItem>
 
         <Divider/>

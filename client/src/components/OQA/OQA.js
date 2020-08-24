@@ -14,11 +14,12 @@ export const OQA = () => {
 
   useEffect(() => {
     console.log("Normal Load");
-    if(filterCriteria.size > 0){
+    console.log('filterCriteria.size', filterCriteria.size);
+    // if(filterCriteria.size > 0){
       console.log("We Hit Next Manually");
       const nextBtn = document.querySelector(".awssld__next");
       if (nextBtn !== null) nextBtn.click();
-    }
+    // }
   }, [filterCriteria]);
 
   return (

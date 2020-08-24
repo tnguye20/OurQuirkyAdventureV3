@@ -4,8 +4,6 @@ const path = require('path');
 const crypto = require('crypto');
 const spawn = require('child-process-promise').spawn;
 const nodeGeocoder = require('node-geocoder');
-const ffmpeg = require('fluent-ffmpeg');
-const ffmpeg_static = require('ffmpeg-static');
 const { uuid } = require("uuidv4");
 let options = {
   provider: 'openstreetmap'
@@ -19,12 +17,6 @@ const {
   geoCalculate,
   imageMagickOutputToObject
 } = require('../utils');
-
-const promisifyCommand = ( command ) => {
-  return new Promise( (resolve, reject) => {
-    command.on('end', resolve).on('error', reject).run();
-  })
-}
 
 exports.extractImageMeta = async ( object ) => {
   const filePath = object.name;
@@ -95,17 +87,7 @@ exports.extractImageMeta = async ( object ) => {
       fs.unlinkSync(tempLocalFile);
       return "Error Occured";
     }
-  } else if (object.contentType.startsWith('video/')) {
-    const memories = await db.collection("memories").where("name", "==", fileName).get();
-    let memory = null;
-    memories.forEach( async memory =>{
-      if (memory.exists){
-        memory = db.collection("memories").doc(memory.id);
-        memory.update({
-          isConverting: true
-        })
-      }
-    });
+  } else if (object.contentType.startsWith('video/') && object.contentType !== "video/mp4") {
 
     await storage.file(filePath).download({destination: tempLocalFile});
     const targetTempFile = `${os.tmpdir()}/${fileName.replace(/\.[^/.]+$/, '') + ".mp4"}`;
@@ -113,37 +95,50 @@ exports.extractImageMeta = async ( object ) => {
     console.log(fileName);
     console.log(targetTempFile);
     console.log(targetFilePath);
-    const command = ffmpeg(tempLocalFile)
-      .setFfmpegPath(ffmpeg_static.path)
-      .format("mp4")
-      .output(targetTempFile)
     try{
-      await promisifyCommand(command);
+      await spawn('ffmpeg', ['-i', tempLocalFile, targetTempFile], {capture: ['stdout', 'stderr']});
       console.log(`Output file is located at ${targetTempFile}`);
-      const token = uuid();
-      const escapedPath = targetFilePath.replace(/\//g, "%2F");
 
-      // Upload new file, delete old file, and update DB with status
-      await storage.upload(targetTempFile, {
-        metadata: {
-          metadata: {
-              firebaseStorageDownloadTokens: token
-          }
-        },
-        destination: targetFilePath
-      });
-      if ( memory !== null ){
-          await memory.update({
-            mimetype: "video/mp4",
-            extension: "mp4",
-            name: targetFilePath.split("/").pop(),
-            url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
-            isConverting: false
-          });
-      }
-      fs.unlinkSync(tempLocalFile);
-      fs.unlinkSync(targetTempFile);
-      storage.file(filePath).delete();
+      // fs.exists( targetTempFile, async ( exists ) => {
+        // if ( exists ) {
+          const token = uuid();
+          const escapedPath = targetFilePath.replace(/\//g, "%2F");
+
+          // Upload new file, delete old file, and update DB with status
+              await storage.upload(targetTempFile, {
+                resumable: false,
+                metadata: {
+                  metadata: {
+                      firebaseStorageDownloadTokens: token
+                  }
+                },
+                destination: targetFilePath
+              });
+              const memories = await db.collection("memories").where("name", "==", fileName).get();
+              memories.forEach( async memory =>{
+                if (memory.exists){
+                  memory = db.collection("memories").doc(memory.id);
+                  await memory.update({
+                    mimetype: "video/mp4",
+                    extension: "mp4",
+                    name: targetFilePath.split("/").pop(),
+                    url: config.resourceBaseURL.replace("<path>", escapedPath).replace("<token>", token),
+                    isConverting: false
+                  });
+                  fs.unlinkSync(tempLocalFile);
+                  fs.unlinkSync(targetTempFile);
+                  storage.file(filePath).delete();
+                }
+              });
+
+              return "Convert Succesfull"
+          // }
+        // } else {
+        //   console.log(`${targetTempFile} does not exist. Conversion failed...`)
+        //   return "Convert Failed"
+        // }
+      // } );
+
     } catch (e) {
       console.log(e);
       fs.unlinkSync(tempLocalFile);

@@ -135,7 +135,8 @@ export const Upload = () => {
             name: newName,
             takenDate: new Date().toISOString(),
             comments: [],
-            tags
+            tags,
+            isConverting: category === "video" && extension !== "mp4" ? true : false
           };
           if (title.length === 0 ){
             info[name].title = "One of my best memories with you";
@@ -148,7 +149,7 @@ export const Upload = () => {
                 createDate: timeCreated,
                 text: comment,
                 replyToId: null,
-                modifiedOn: timeCreated
+                modifiedOn: timeCreated,
               }
               db.collection("memories").doc(ref.id).update({comments: [ info[name].comment ]})
             } else {

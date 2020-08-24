@@ -55,14 +55,14 @@ export const Slider = ({
     let video = null;
 
     if(_slider){
-      console.log(_slider);
+      // console.log(_slider);
       isVideo = _slider.nextSlide.children[0].innerHTML.indexOf("video") === -1 ? false : true;
       video = _slider.nextSlide.childNodes[0].firstElementChild;
     } else {
       isVideo = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].innerHTML.indexOf("video") === -1 ? false : true;
       video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild;
     }
-    console.log("isVideo", isVideo);
+    // console.log("isVideo", isVideo);
     let timeout = null;
     if (isVideo){
       video.controls = false;
@@ -97,7 +97,7 @@ export const Slider = ({
       setLastTimeOutID(timeout);
     }
 
-    return () => { if(timeout !== null) { clearTimeout(timeout) }; if (video !== null) { video.pause(); } }
+    // return () => { if(timeout !== null) { clearTimeout(timeout) }; if (video !== null) { video.pause(); } }
   }
 
   useEffect( () => {
@@ -117,7 +117,7 @@ export const Slider = ({
     mobileTouch={true}
     onTransitionRequest={ () => {
       console.log("Transition Requested");
-      console.log(lastTimeOutID);
+      // console.log(lastTimeOutID);
       clearTimeout(lastTimeOutID);
     } }
     onTransitionStart={ slider => {
