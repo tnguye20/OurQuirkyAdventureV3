@@ -103,7 +103,7 @@ export const Slider = ({
   useEffect( () => {
     console.log("-- Slider Effect --");
     return sliderEffect();
-  }, [] )
+  }, [] );
 
   const filtered =  memFilter(memories, filterCriteria);
 
@@ -114,26 +114,26 @@ export const Slider = ({
   return (
     <AwesomeSlider
     ref={sliderRef}
-    mobileTouch={true}
     onTransitionRequest={ () => {
       console.log("Transition Requested");
-      // console.log(lastTimeOutID);
-      clearTimeout(lastTimeOutID);
+      for ( let i = lastTimeOutID; i >= 0; i--  ){
+        clearTimeout(i);
+      }
     } }
     onTransitionStart={ slider => {
       console.log("Transition Starts");
       sliderEffect(slider);
     }}
     onTransitionEnd={ () => {
-      const randomIndex = Math.floor(Math.random() * ANIMATION_LIST.length);
       console.log("Transition Ends");
+      const randomIndex = Math.floor(Math.random() * ANIMATION_LIST.length);
       setTransition( ANIMATION_LIST[randomIndex] );
     }}
     bullets={false}
     organicArrows={false}
     fillParent={true}
     play={true}
-    cancelOnInteraction={false}
+    cancelOnInteraction={true}
     interval={5000}
     animation={transition}
     cssModule={[CoreStyles, FoldStyles, FallStyles, OpenStyles, CubeStyles, ScaleOutStyles]}

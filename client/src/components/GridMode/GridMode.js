@@ -95,6 +95,10 @@ export const GridMode = () => {
                     src={url}
                     title=""
                     controls
+                    muted
+                    playsInline
+                    autoPlay
+                    loop
                   />
                   <CardActions disableSpacing>
                     <IconButton aria-label="add to favorites">

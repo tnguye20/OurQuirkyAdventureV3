@@ -4,7 +4,7 @@ const app = require('./app');
 const api = functions.https.onRequest(app);
 
 const runTimeOpts = {
-  timeoutSeconds: 300,
+  timeoutSeconds: 540,
   memory: '2GB'
 }
 
