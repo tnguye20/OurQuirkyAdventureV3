@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import AwesomeSlider from 'react-awesome-slider';
 import CoreStyles from 'react-awesome-slider/src/core/styles.scss';
-// import withAutoplay from 'react-awesome-slider/dist/autoplay';
+import withAutoplay from 'react-awesome-slider/dist/autoplay';
 
 import FoldStyles from 'react-awesome-slider/src/styled/fold-out-animation';
 import FallStyles from 'react-awesome-slider/src/styled/fall-animation';
@@ -17,7 +17,7 @@ import moment from 'moment';
 
 import { memFilter } from '../../utils';
 
-// const AutoplaySlider = withAutoplay(AwesomeSlider);
+const AutoplaySlider = withAutoplay(AwesomeSlider);
 
 const ANIMATION_LIST = [
   "fallAnimation",
@@ -36,7 +36,7 @@ export const Slider = ({
 
   const sliderRef = useRef(null);
   const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
-  const [ lastTimeOutID, setLastTimeOutID ] = useState(null);
+  const [ interval, setInterval ] = useState(5000);
 
   const iOS = () => {
     return [
@@ -51,19 +51,22 @@ export const Slider = ({
 
   const sliderEffect = (_slider) => {
     let currentSlide = sliderRef.current;
+    console.log(currentSlide);
     let isVideo = false;
     let video = null;
 
     if(_slider){
-      // console.log(_slider);
       isVideo = _slider.nextSlide.children[0].innerHTML.indexOf("video") === -1 ? false : true;
       video = _slider.nextSlide.childNodes[0].firstElementChild;
     } else {
-      isVideo = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].innerHTML.indexOf("video") === -1 ? false : true;
-      video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild;
+      if(currentSlide.slider === undefined){
+        isVideo = currentSlide.currentInfo.currentSlide.innerHTML.indexOf("video") === -1 ? false : true;
+        video = currentSlide.currentInfo.currentSlide.firstChild.firstElementChild;
+      } else {
+        isVideo = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].innerHTML.indexOf("video") === -1 ? false : true;
+        video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild;
+      }
     }
-    // console.log("isVideo", isVideo);
-    let timeout = null;
     if (isVideo){
       video.controls = true;
       video.playsinline = true;
@@ -74,30 +77,40 @@ export const Slider = ({
       video.preload = "metadata";
       video.loop = false;
       video.onended = () => {
-        console.log("Video Manual Push");
-        currentSlide.clickNext();
+        // User sped up video using controls
+        if( video.currentTime === video.duration  ){
+          console.log("Video Manual Push");
+          setInterval(5000);
+          const nextBtn = document.querySelector(".awssld__next");
+          if (nextBtn !== null) nextBtn.click();
+        }
+      }
+      video.onloadedmetadata = () => {
+        const duration = (video.duration) * 1000;
+        console.log(video);
+        console.log(duration);
+        setInterval(duration);
       }
       video.onplay = () => {
         video.muted = true;
+      }
+      video.ontimeupdate = () => {
+        // console.log("currentTime", video.currentTime);
       }
       video.play().then( () => {
       }).catch( error => {
         console.log(error);
         if (error.name === "NotAllowedError"){
           console.log("Device reuqires users to press play");
-          console.log("Video Manual Push");
-          currentSlide.clickNext();
         }
       });
     } else {
-      timeout = setTimeout( () => {
-        console.log("Image Manual Push");
-        currentSlide.clickNext();
-      }, 5000);
-      setLastTimeOutID(timeout);
+      console.log("Not a video. Autoplay Resumes")
+      if ( interval !== 5000 ){
+        setInterval(5000);
+      }
     }
 
-    // return () => { if(timeout !== null) { clearTimeout(timeout) }; if (video !== null) { video.pause(); } }
   }
 
   useEffect( () => {
@@ -112,13 +125,10 @@ export const Slider = ({
   }
 
   return (
-    <AwesomeSlider
+    <AutoplaySlider
     ref={sliderRef}
     onTransitionRequest={ () => {
       console.log("Transition Requested");
-      for ( let i = lastTimeOutID; i >= 0; i--  ){
-        clearTimeout(i);
-      }
     } }
     onTransitionStart={ slider => {
       console.log("Transition Starts");
@@ -133,8 +143,8 @@ export const Slider = ({
     organicArrows={false}
     fillParent={true}
     play={true}
-    cancelOnInteraction={true}
-    interval={5000}
+    cancelOnInteraction={false}
+    interval={interval}
     animation={transition}
     cssModule={[CoreStyles, FoldStyles, FallStyles, OpenStyles, CubeStyles, ScaleOutStyles]}
     >
@@ -155,6 +165,6 @@ export const Slider = ({
         </div>
         </div>
       ) ) }
-    </AwesomeSlider>
+    </AutoplaySlider>
   )
 }

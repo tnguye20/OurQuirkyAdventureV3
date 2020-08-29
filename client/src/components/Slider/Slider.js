@@ -34,6 +34,9 @@ export const Slider = ({
   setFilterCriteria,
 }) => {
 
+  const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
+  const [ videoDuration, setVideoDuration ] = useState(5000);
+
   useEffect( () => {
     console.log("Slider useEffect");
     const video = document.querySelector("video");
@@ -45,6 +48,8 @@ export const Slider = ({
       video.preload = "metadata";
       video.loop = false;
       video.play();
+      setVideoDuration(video.duration * 1000)
+
       // setTimeout( () => {
       //   console.log("Manually Push for Videos");
       //   const nextBtn = document.querySelector(".awssld__next");
@@ -54,8 +59,6 @@ export const Slider = ({
 
     return () => { if (video !== null) video.pause() }
   } )
-
-  const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
 
   const filtered =  memFilter(memories, filterCriteria);
 
@@ -74,7 +77,7 @@ export const Slider = ({
     fillParent={true}
     play={true}
     cancelOnInteraction={false}
-    interval={5000}
+    interval={videoDuration}
     animation={transition}
     cssModule={[CoreStyles, FoldStyles, FallStyles, OpenStyles, CubeStyles, ScaleOutStyles]}
     >
