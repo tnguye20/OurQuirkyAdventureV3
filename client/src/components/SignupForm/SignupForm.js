@@ -19,7 +19,7 @@ export const SignupForm = () => {
     e.preventDefault();
     try {
       const { user } = await auth.createUserWithEmailAndPassword(email, password);
-      const { uid, emailVerified } = user;
+      const { uid } = user;
       console.log(uid);
       console.log(displayName);
       // const formData = { id: uid, email, password, displayName, emailVerified, dbOnly: true };

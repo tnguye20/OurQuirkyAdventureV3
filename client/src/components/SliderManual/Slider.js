@@ -15,8 +15,6 @@ import { NoSlide } from '../NoSlide';
 
 import moment from 'moment';
 
-import { memFilter } from '../../utils';
-
 const AutoplaySlider = withAutoplay(AwesomeSlider);
 
 const ANIMATION_LIST = [
@@ -28,55 +26,80 @@ const ANIMATION_LIST = [
 ]
 
 export const Slider = ({
-  memories,
-  filterCriteria,
-  setOpenFilter,
-  setFilterCriteria,
+  filtered
 }) => {
 
   const sliderRef = useRef(null);
   const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
   const [ interval, setInterval ] = useState(5000);
 
-  const iOS = () => {
-    return [
-        'iPad Simulator',
-        'iPhone Simulator',
-        'iPod Simulator',
-        'iPad',
-        'iPhone',
-        'iPod'
-      ].includes(navigator.platform) || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-  }
+  // const iOS = () => {
+  //   return [
+  //       'iPad Simulator',
+  //       'iPhone Simulator',
+  //       'iPod Simulator',
+  //       'iPad',
+  //       'iPhone',
+  //       'iPod'
+  //     ].includes(navigator.platform) || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
+  // }
 
   const sliderEffect = (_slider) => {
     let currentSlide = sliderRef.current;
-    console.log(currentSlide);
     let isVideo = false;
     let video = null;
 
     if(_slider){
-      isVideo = _slider.nextSlide.children[0].innerHTML.indexOf("video") === -1 ? false : true;
-      video = _slider.nextSlide.childNodes[0].firstElementChild;
+      isVideo = _slider.nextSlide.firstElementChild.innerHTML.indexOf("video") === -1 ? false : true;
+      video = _slider.nextSlide.firstElementChild.firstElementChild.firstElementChild;
     } else {
       if(currentSlide.slider === undefined){
         isVideo = currentSlide.currentInfo.currentSlide.innerHTML.indexOf("video") === -1 ? false : true;
-        video = currentSlide.currentInfo.currentSlide.firstChild.firstElementChild;
+        video = currentSlide.currentInfo.currentSlide.firstChild.firstElementChild.firstElementChild;
       } else {
         isVideo = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].innerHTML.indexOf("video") === -1 ? false : true;
-        video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild;
+        video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild.firstElementChild;
       }
     }
     if (isVideo){
       video.controls = true;
       video.playsinline = true;
       video.playsInline = true;
-      video.muted = true;
       video.autoplay = true;
       video.autoPlay = true;
       video.preload = "metadata";
       video.loop = false;
+      video.muted = true;
+      video.setAttribute("muted", "");
+
+      video.onloadedmetadata = () => {
+        const duration = (video.duration) * 1000;
+        setInterval(duration);
+        setTimeout( () => {
+          video.play().then( () => {
+          }).catch( error => {
+            console.log(error);
+            alert(error);
+            if (error.name === "NotAllowedError"){
+              console.log("Device reuqires users to press play");
+            }
+          });
+        }, 0 );
+      }
+
       video.onended = () => {
+          // const nextBtn = document.querySelector(".awssld__next");
+          // if (nextBtn !== null) {
+          //   if ( iOS() ) {
+          //     alert("WE HERE");
+          //     sliderRef.current.currentInfo.currentSlide.dispatchEvent(new Event("ontransitionrequest"));
+          //     sliderRef.current.currentInfo.currentSlide.dispatchEvent(new Event("transitionrequest"));
+          //     sliderRef.current.currentInfo.currentSlide.dispatchEvent(new Event("transitionstart"));
+          //     sliderRef.current.currentInfo.currentSlide.dispatchEvent(new Event("ontransitionstart"));
+          //     nextBtn.dispatchEvent(new Event("touchend"));
+          //     nextBtn.dispatchEvent(new Event("ontouchend"));
+          //   }
+          // }
         // User sped up video using controls
         if( video.currentTime === video.duration  ){
           console.log("Video Manual Push");
@@ -85,27 +108,8 @@ export const Slider = ({
           if (nextBtn !== null) nextBtn.click();
         }
       }
-      video.onloadedmetadata = () => {
-        const duration = (video.duration) * 1000;
-        console.log(video);
-        console.log(duration);
-        setInterval(duration);
-      }
-      video.onplay = () => {
-        video.muted = true;
-      }
-      video.ontimeupdate = () => {
-        // console.log("currentTime", video.currentTime);
-      }
-      video.play().then( () => {
-      }).catch( error => {
-        console.log(error);
-        if (error.name === "NotAllowedError"){
-          console.log("Device reuqires users to press play");
-        }
-      });
     } else {
-      console.log("Not a video. Autoplay Resumes")
+      // console.log("Not a video. Autoplay Resumes")
       if ( interval !== 5000 ){
         setInterval(5000);
       }
@@ -115,10 +119,8 @@ export const Slider = ({
 
   useEffect( () => {
     console.log("-- Slider Effect --");
-    return sliderEffect();
+    if (filtered.length > 0) return sliderEffect();
   }, [] );
-
-  const filtered =  memFilter(memories, filterCriteria);
 
   if(filtered.length === 0){
     return ( <NoSlide /> );
@@ -127,15 +129,15 @@ export const Slider = ({
   return (
     <AutoplaySlider
     ref={sliderRef}
-    onTransitionRequest={ () => {
-      console.log("Transition Requested");
+    onTransitionRequest={ slider => {
+      // console.log("Transition Requested");
     } }
     onTransitionStart={ slider => {
-      console.log("Transition Starts");
+      // console.log("Transition Starts");
       sliderEffect(slider);
     }}
     onTransitionEnd={ () => {
-      console.log("Transition Ends");
+      // console.log("Transition Ends");
       const randomIndex = Math.floor(Math.random() * ANIMATION_LIST.length);
       setTransition( ANIMATION_LIST[randomIndex] );
     }}
@@ -150,19 +152,19 @@ export const Slider = ({
     >
     { filtered.map( (memory, index) => (
         <div key={index} data-src={memory.url}>
-        <div className="slideCaption">
-        <b>{ memory.title }</b>
-        {
-          memory.latitude !== undefined ? (
-            <div className="slideMeta">
-            { memory.takenDate ? (
-              <p>{ moment.utc(memory.takenDate).format('MMMM Do YYYY, h:mm:ss a') }</p>
-            ): "" }
-            <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
-            </div>
-          ) : ""
-        }
-        </div>
+          <div className="slideCaption">
+          <b>{ memory.title }</b>
+          {
+            memory.latitude !== undefined ? (
+              <div className="slideMeta">
+              { memory.takenDate ? (
+                <p>{ moment.utc(memory.takenDate).format('MMMM Do YYYY, h:mm:ss a') }</p>
+              ): "" }
+              <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
+              </div>
+            ) : ""
+          }
+          </div>
         </div>
       ) ) }
     </AutoplaySlider>

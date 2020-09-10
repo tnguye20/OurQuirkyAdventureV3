@@ -7,6 +7,8 @@ import { NoSlide } from '../NoSlide';
 import { Filter } from '../Filter';
 import { Slider } from '../SliderManual';
 // import { Slider } from '../Slider';
+import { memFilter } from '../../utils';
+
 
 export const OQA = () => {
   const { memories } = useMemoriesValue();
@@ -14,7 +16,7 @@ export const OQA = () => {
 
   useEffect(() => {
     console.log("Normal Load");
-    console.log('filterCriteria.size', filterCriteria.size);
+    // console.log('filterCriteria.size', filterCriteria.size);
     // if(filterCriteria.size > 0){
       console.log("We Hit Next Manually");
       const nextBtn = document.querySelector(".awssld__next");
@@ -22,12 +24,14 @@ export const OQA = () => {
     // }
   }, [filterCriteria]);
 
+  const filtered =  memFilter(memories, filterCriteria);
+
   return (
     memories.length !== 0
     ? (
       <>
         <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
-        <Slider memories={memories} filterCriteria={filterCriteria} setOpenFilter={setOpenFilter} setFilterCriteria={setFilterCriteria}/>
+        <Slider filtered={filtered} memories={memories} filterCriteria={filterCriteria} setOpenFilter={setOpenFilter} setFilterCriteria={setFilterCriteria}/>
       </>
     ) : ( <NoSlide /> )
   )

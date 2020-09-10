@@ -16,8 +16,8 @@
     "node-sass": "^4.14.1",
     "npm": "^6.14.5",
     "react": "^16.13.1",
-    "react-awesome-slider": "^4.1.0",
     "react-dom": "^16.13.1",
+    "react-awesome-slider": "https://github.com/tnguye20/react-awesome-slider.git",
     "react-responsive-carousel": "^3.2.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "^3.4.0"

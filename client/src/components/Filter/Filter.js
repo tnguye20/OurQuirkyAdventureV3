@@ -10,6 +10,7 @@ import {
   TextField,
   Chip,
   Grid,
+  FormControl, InputLabel, Select, MenuItem
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
@@ -29,20 +30,23 @@ export const Filter = ({
     const [ sValue, setSValue ] = useState([]);
     const [ mValue, setMValue ] = useState([]);
     const [ yValue, setYValue ] = useState([]);
+    const [ mimetype, setType ] = useState("");
 
     useEffect( () => {
       if(filterCriteria.size === 0){
-          setValue([]);
-          setCValue([]);
-          setSValue([]);
-          setMValue([]);
-          setYValue([]);
+        setValue([]);
+        setCValue([]);
+        setSValue([]);
+        setMValue([]);
+        setYValue([]);
+        setType("all");
       } else {
         if ( filterCriteria.has("tags") ) setValue(filterCriteria.get("tags"));
         if ( filterCriteria.has("city") ) setCValue(filterCriteria.get("city"));
         if ( filterCriteria.has("state") ) setSValue(filterCriteria.get("state"));
         if ( filterCriteria.has("takenMonth") ) setMValue(filterCriteria.get("takenMonth"));
         if ( filterCriteria.has("takenYear") ) setYValue(filterCriteria.get("takenYear"));
+        if ( filterCriteria.has("mimetype") ) setType(filterCriteria.get("mimetype"));
       }
     },[filterCriteria])
 
@@ -63,6 +67,7 @@ export const Filter = ({
         if (yValue.length > 0){
             filters.set("takenYear", yValue);
         }
+        filters.set("mimetype", mimetype);
         setFilterCriteria(filters);
         handleClose();
     }
@@ -174,20 +179,40 @@ export const Filter = ({
                 />
               </Grid>
           </Grid>
+          <br />
+           <FormControl variant="outlined" style={{ width: "100%" }}>
+							<InputLabel htmlFor="outlined-mimetype-native-simple">Type</InputLabel>
+							<Select
+								value={mimetype}
+                onChange={ e => setType(e.target.value) }
+								label="type"
+								inputProps={{
+									name: 'mimetype',
+									id: 'outlined-mimetype-native-simple',
+								}}
+							>
+								<MenuItem value="all">All</MenuItem>
+								<MenuItem value="image">Image</MenuItem>
+								<MenuItem value="video">Video</MenuItem>
+							</Select>
+					</FormControl>
+          <br />
+
         </DialogContent>
         <DialogActions>
         <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
             Cancel
         </Button>
-        <Button 
+        <Button
             disabled={
                 value.length === 0  &&
                 cValue.length === 0 &&
                 sValue.length === 0 &&
                 mValue.length === 0 &&
-                yValue.length === 0
-            } 
-            onClick={aggregateFilters} 
+                yValue.length === 0 &&
+                mimetype === "all"
+            }
+            onClick={aggregateFilters}
             color="primary"
             variant="outlined"
             size="small"
