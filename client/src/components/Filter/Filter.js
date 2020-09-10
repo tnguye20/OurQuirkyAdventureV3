@@ -69,6 +69,7 @@ export const Filter = ({
         }
         filters.set("mimetype", mimetype);
         setFilterCriteria(filters);
+        localStorage.setItem("filterCriteria", JSON.stringify(Array.from(filters)));
         handleClose();
     }
 

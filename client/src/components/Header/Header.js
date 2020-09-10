@@ -87,6 +87,7 @@ export const Header = () => {
          filterCriteria.size > 0 ? (
            <ListItem button className="subItem" onClick={ () => {
              setOpen(false);
+             localStorage.removeItem("filterCriteria");
              setFilterCriteria(new Map());
            } }>
             <ListItemIcon><ClearAllIcon htmlColor={"white"}/></ListItemIcon>
