@@ -4,9 +4,21 @@ import { useAuthValue } from '../contexts/';
 
 export const useUser = () => {
   const { authUser } = useAuthValue();
-  const [ user, setUser ] = useState({
+
+  let cache = {
     collections: [],
-  });
+  };
+  try{
+    cache = localStorage.getItem("userInfo") === null
+      ? {
+          collections: [],
+        }
+      : JSON.parse(localStorage.getItem("userInfo"));
+  } catch(e) {
+    console.log(e);
+  }
+
+  const [ user, setUser ] = useState(cache);
 
   useEffect(() => {
     let unsubscribe = db
@@ -18,8 +30,12 @@ export const useUser = () => {
           id: doc.id,
           ...doc.data()
       });
+      localStorage.setItem("userInfo", JSON.stringify({
+          id: doc.id,
+          ...doc.data()
+      }));
     });
-    
+
     return () => unsubscribe();
   }, [authUser.uid])
 

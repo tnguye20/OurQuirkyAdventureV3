@@ -1,12 +1,14 @@
 exports.makeUser = ({
   id = "",
-  displayName = "",
+  displayName = "Demo User",
   email = "",
   emailVerified = false,
   associations = [],
   password = "",
   collections = [],
-  token = null
+  token = null,
+  animation = "random",
+  interval = 5000
 }) => {
   if (displayName === "" || email === "" || password === ""){
     throw new Error("Insufiicient User data");
@@ -20,6 +22,7 @@ exports.makeUser = ({
   const setIsVerified = (_isVerified) => ( isVerified = _isVerified );
   const setEmail = (_email) => ( email = _email );
   const setToken = (_token) => ( token = _token );
+  const setDisplayName = (_displayName) => ( displayName = _displayName );
 
   const getData = () => (
     {
@@ -29,7 +32,9 @@ exports.makeUser = ({
       displaynName,
       associations,
       collections,
-      token
+      token,
+      animation,
+      interval
     }
   )
 
@@ -46,6 +51,7 @@ exports.makeUser = ({
     setEmail,
     getData,
     setToken,
+    setDisplayName
     addCollection,
   })
 }

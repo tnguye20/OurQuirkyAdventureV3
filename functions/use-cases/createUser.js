@@ -5,7 +5,6 @@ module.exports.makeCreateUser = ( {dba, auth} ) => {
     try{
       const userModel = makeUser(userInfo);
       let id = userModel.getID();
-      let emailVerified = userModel.isVerified();
       const email = userModel.getEmail();
       const password = userModel.getPassword();
       const { dbOnly } = userInfo;

@@ -95,9 +95,7 @@ export const GridMode = () => {
                     src={url}
                     title=""
                     controls
-                    muted
                     playsInline
-                    autoPlay
                     loop
                   />
                   <CardActions disableSpacing>

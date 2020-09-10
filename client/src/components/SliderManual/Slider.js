@@ -26,23 +26,12 @@ const ANIMATION_LIST = [
 ]
 
 export const Slider = ({
-  filtered
+  filtered,
+  user
 }) => {
-
   const sliderRef = useRef(null);
-  const [ transition, setTransition ] = useState(ANIMATION_LIST[0]);
-  const [ interval, setInterval ] = useState(5000);
-
-  // const iOS = () => {
-  //   return [
-  //       'iPad Simulator',
-  //       'iPhone Simulator',
-  //       'iPod Simulator',
-  //       'iPad',
-  //       'iPhone',
-  //       'iPod'
-  //     ].includes(navigator.platform) || (navigator.userAgent.includes("Mac") && "ontouchend" in document)
-  // }
+  const [ transition, setTransition ] = useState(user.animation === undefined ? ANIMATION_LIST[0] : user.animation);
+  const [ interval, setInterval ] = useState(user.interval);
 
   const sliderEffect = (_slider) => {
     let currentSlide = sliderRef.current;
@@ -103,15 +92,15 @@ export const Slider = ({
         // User sped up video using controls
         if( video.currentTime === video.duration  ){
           console.log("Video Manual Push");
-          setInterval(5000);
+          setInterval(user.interval);
           const nextBtn = document.querySelector(".awssld__next");
           if (nextBtn !== null) nextBtn.click();
         }
       }
     } else {
       // console.log("Not a video. Autoplay Resumes")
-      if ( interval !== 5000 ){
-        setInterval(5000);
+      if ( interval !== user.interval ){
+        setInterval(user.interval);
       }
     }
 
@@ -138,8 +127,10 @@ export const Slider = ({
     }}
     onTransitionEnd={ () => {
       // console.log("Transition Ends");
-      const randomIndex = Math.floor(Math.random() * ANIMATION_LIST.length);
-      setTransition( ANIMATION_LIST[randomIndex] );
+      if( user.animation === "random" ){
+        const randomIndex = Math.floor(Math.random() * ANIMATION_LIST.length);
+        setTransition( ANIMATION_LIST[randomIndex] );
+      }
     }}
     bullets={false}
     organicArrows={false}

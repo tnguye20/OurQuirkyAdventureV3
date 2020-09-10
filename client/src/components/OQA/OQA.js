@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useMemoriesValue, useFilterValue } from '../../contexts';
+import { useMemoriesValue, useFilterValue, useUserValue } from '../../contexts';
 
 import './OQA.css';
 
@@ -13,6 +13,7 @@ import { memFilter } from '../../utils';
 export const OQA = () => {
   const { memories } = useMemoriesValue();
   const { openFilter, setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
+  const { user } = useUserValue();
 
   useEffect(() => {
     console.log("Normal Load");
@@ -31,7 +32,7 @@ export const OQA = () => {
     ? (
       <>
         <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
-        <Slider filtered={filtered} memories={memories} filterCriteria={filterCriteria} setOpenFilter={setOpenFilter} setFilterCriteria={setFilterCriteria}/>
+        <Slider user={user} filtered={filtered} memories={memories} filterCriteria={filterCriteria} setOpenFilter={setOpenFilter} setFilterCriteria={setFilterCriteria}/>
       </>
     ) : ( <NoSlide /> )
   )

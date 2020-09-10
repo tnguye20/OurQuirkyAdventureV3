@@ -34,7 +34,9 @@ export const SignupForm = () => {
         displayName,
         email,
         associations: [],
-        collections: []
+        collections: [],
+        interval: 5000,
+        animation: "random"
       });
       setAuthUser(user);
     } catch (error) {

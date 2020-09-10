@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useHistory } from 'react-router-dom';
-import { useFilterValue } from '../../contexts';
+import { useFilterValue, useUserValue } from '../../contexts';
 import {
   makeStyles,
   Button,
@@ -19,6 +19,7 @@ import AppsIcon from '@material-ui/icons/Apps';
 import MenuIcon from '@material-ui/icons/Menu';
 import FilterIcon from '@material-ui/icons/Filter';
 import SettingsIcon from '@material-ui/icons/Settings';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import './Header.css';
 
 import * as ROUTES from '../../constants/routes';
@@ -43,6 +44,7 @@ export const Header = () => {
   const history = useHistory();
   const classes = useStyles();
   const { setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
+  const { user } = useUserValue();
   const [ open, setOpen ] = useState(false);
 
   const handleSignOut = (e) => {
@@ -53,6 +55,12 @@ export const Header = () => {
   const MenuList = () => (
     <div className={ classes.list }>
       <List>
+        <ListItem button>
+          <ListItemIcon><AccountCircleIcon htmlColor={"white"}/></ListItemIcon>
+          <ListItemText primary={<h4><i>{user.displayName}</i></h4>} />
+        </ListItem>
+
+        <Divider />
         <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.UPLOAD)  } }>
           <ListItemIcon><CloudUploadIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Upload" />
