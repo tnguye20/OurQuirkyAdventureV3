@@ -61,6 +61,7 @@ export const Slide = ( { user } ) => {
       </Collapse>
 
       <h3>Slide Settings</h3>
+      <br/>
       <form autoComplete="off" onSubmit={handleUpdate}>
         <FormControl variant="outlined" style={{ width: "100%" }}>
             <InputLabel htmlFor="outlined-interval-native-simple">Slide Interval</InputLabel>

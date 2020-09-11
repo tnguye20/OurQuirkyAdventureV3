@@ -55,10 +55,6 @@ export const App = () => {
               </UserContextProvider>
             </AuthRoute>
 
-            <AuthRoute path="/landing">
-              <Landing />
-            </AuthRoute>
-
             <AuthRoute path={ ROUTES.USER_SETTINGS }>
               <UserContextProvider>
                 <FilterContextProvider>
@@ -68,7 +64,7 @@ export const App = () => {
               </UserContextProvider>
             </AuthRoute>
 
-            <AuthRoute exact path={ ROUTES.SLIDE }>
+            <AuthRoute path={ ROUTES.SLIDE }>
               <MemoriesContextProvider>
                 <UserContextProvider>
                   <FilterContextProvider>
@@ -79,16 +75,10 @@ export const App = () => {
               </MemoriesContextProvider>
             </AuthRoute>
 
-            <AuthRoute exact path={ ROUTES.ROOT }>
-              <MemoriesContextProvider>
-                <UserContextProvider>
-                  <FilterContextProvider>
-                    <Header />
-                    <OQA />
-                  </FilterContextProvider>
-                </UserContextProvider>
-              </MemoriesContextProvider>
-            </AuthRoute>
+            <UnAuthRoute path={ ROUTES.ROOT }>
+              <Landing />
+            </UnAuthRoute>
+
           </Switch>
         </Router>
     </AuthProvider>

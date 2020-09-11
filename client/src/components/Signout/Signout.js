@@ -10,7 +10,7 @@ export const Signout = () => {
         setAuthUser(null);
         localStorage.removeItem("idToken");
         localStorage.removeItem("uid");
-      }, 1500 );
+      } , 1000 );
     }).catch( err => {
       console.log(err);
     } )

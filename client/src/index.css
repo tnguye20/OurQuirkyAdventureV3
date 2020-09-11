@@ -10,10 +10,10 @@ body {
 }
 
 form label {
-  color: gray !important;
+  /* color: gray !important; */
 }
 form input {
-  color: lightgrey !important;
+  /* color: lightgrey !important; */
 }
 
 code {

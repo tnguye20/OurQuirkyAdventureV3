@@ -22,7 +22,7 @@ export const LoginForm = () => {
               localStorage.setItem("uid", user.uid);
               user.tokenId = idToken;
               setAuthUser(user);
-              history.push("/");
+              history.push("/slide");
             });
           });
   }

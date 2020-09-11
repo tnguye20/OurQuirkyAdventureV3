@@ -40,7 +40,7 @@ export const UnAuthRoute = ({children, ...rest}) => {
           ) : (
             <Redirect
               to={{
-                pathname: ROUTES.ROOT,
+                pathname: ROUTES.SLIDE,
                 state: { from: location }
               }}
             />
