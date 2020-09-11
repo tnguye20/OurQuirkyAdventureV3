@@ -46,7 +46,6 @@ export const SignupForm = () => {
 
   return (
     <>
-      <h4>Sign Up Form</h4>
       <form noValidate autoComplete="off" method="POST" action="/signup" onSubmit={handleSubmit}>
         <TextField
           autoFocus

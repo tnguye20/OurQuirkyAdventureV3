@@ -14,6 +14,8 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 
+import './Filter.css';
+
 export const Filter = ({
     open,
     handleClose,

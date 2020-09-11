@@ -12,6 +12,9 @@ import Alert from '@material-ui/lab/Alert';
 import * as ALERT_TYPES from '../../../constants/alerts';
 
 const useStyles = makeStyles((theme) => ({
+  inputText: {
+    color: "white"
+  },
   chip: {
     margin: theme.spacing(0.5),
   },
@@ -60,8 +63,8 @@ export const Account = ( { user } ) => {
 
       <h3>Account Settings</h3>
       <form autoComplete="off" onSubmit={handleUpdate}>
-        <TextField onChange={e => setDisplayName(e.target.value)} label="Display Name" id="displayName" value={ displayName } fullWidth margin="normal" variant="outlined"/>
-        <TextField disabled onChange={e => setEmail(e.target.value)} label="Email" id="email" value={ email } fullWidth margin="normal" variant="outlined"/>
+        <TextField className={classes.inputText} onChange={e => setDisplayName(e.target.value)} label="Display Name" id="displayName" value={ displayName } fullWidth margin="normal" variant="outlined"/>
+        <TextField className={classes.inputText} disabled onChange={e => setEmail(e.target.value)} label="Email" id="email" value={ email } fullWidth margin="normal" variant="outlined"/>
         <div>
           {
             user.collections.map( (collection, index) => (

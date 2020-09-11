@@ -27,7 +27,11 @@ const ANIMATION_LIST = [
 
 export const Slider = ({
   filtered,
-  user
+  user,
+  fillParent=true,
+  caption=true,
+  organicArrows=false,
+  bullets=false
 }) => {
   const sliderRef = useRef(null);
   const [ transition, setTransition ] = useState(user.animation === undefined ? ANIMATION_LIST[0] : user.animation);
@@ -118,7 +122,7 @@ export const Slider = ({
   return (
     <AutoplaySlider
     ref={sliderRef}
-    onTransitionRequest={ slider => {
+    onTransitionRequest={ () => {
       // console.log("Transition Requested");
     } }
     onTransitionStart={ slider => {
@@ -132,9 +136,9 @@ export const Slider = ({
         setTransition( ANIMATION_LIST[randomIndex] );
       }
     }}
-    bullets={false}
-    organicArrows={false}
-    fillParent={true}
+    bullets={bullets}
+    organicArrows={organicArrows}
+    fillParent={fillParent}
     play={true}
     cancelOnInteraction={false}
     interval={interval}
@@ -143,19 +147,23 @@ export const Slider = ({
     >
     { filtered.map( (memory, index) => (
         <div key={index} data-src={memory.url}>
-          <div className="slideCaption">
-          <b>{ memory.title }</b>
           {
-            memory.latitude !== undefined ? (
-              <div className="slideMeta">
-              { memory.takenDate ? (
-                <p>{ moment.utc(memory.takenDate).format('MMMM Do YYYY, h:mm:ss a') }</p>
-              ): "" }
-              <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
+            caption === true ? (
+              <div className="slideCaption">
+              <b>{ memory.title }</b>
+              {
+                memory.latitude !== undefined ? (
+                  <div className="slideMeta">
+                  { memory.takenDate ? (
+                    <p>{ moment.utc(memory.takenDate).format('MMMM Do YYYY, h:mm:ss a') }</p>
+                  ): "" }
+                  <p>{ `${memory.neighbourhood} ${memory.streetName}, ${memory.city}, ${memory.state}` }</p>
+                  </div>
+                ) : ""
+              }
               </div>
             ) : ""
           }
-          </div>
         </div>
       ) ) }
     </AutoplaySlider>

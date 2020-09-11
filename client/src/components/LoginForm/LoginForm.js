@@ -29,7 +29,6 @@ export const LoginForm = () => {
 
   return (
     <>
-      <h4>Login Form</h4>
       <form noValidate autoComplete="off" method="POST" action="/login" onSubmit={handleSubmit}>
         <TextField
           autoFocus

@@ -1,8 +1,10 @@
 import React from 'react';
 import {
   Grid,
-  Container
+  Container,
+  Typography
 } from '@material-ui/core';
+import { Link } from 'react-router-dom';
 import { LoginForm } from '../LoginForm';
 
 export const Login = () => {
@@ -16,6 +18,16 @@ export const Login = () => {
         style={{ minHeight: '100vh'}}
       >
         <Grid item xs={12} sm={12}>
+          <Link to="/" className="header">
+            <Typography
+              align="center"
+              variant="h1"
+              component="h2"
+              gutterBottom
+            >
+              Our Quirky Adventure
+            </Typography>
+          </Link>
           <LoginForm />
         </Grid>
       </Grid>

@@ -2,6 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import './Landing.css';
 
+import { Slider } from '../SliderManual/';
+
 import * as ROUTES from '../../constants/routes';
 
 export const Landing = () => {
@@ -14,6 +16,16 @@ export const Landing = () => {
 			</div>
 			<nav>
 				<ul className="nav-links">
+          <li>
+            <Link className="nav-link" to={ ROUTES.LOGIN }>
+              Features
+            </Link>
+          </li>
+          <li>
+            <Link className="nav-link" to={ ROUTES.SIGNUP }>
+              Sign Up
+            </Link>
+          </li>
 				</ul>
 			</nav>
 			<div className="cart">
@@ -37,12 +49,25 @@ export const Landing = () => {
 						</p>
 					</div>
 					<div className="cta">
-						<button className="cta-select">Features</button>
+						<button className="cta-select">Demo</button>
             <button className="cta-add"><a rel="noopener noreferrer" target="_blank" href="https://github.com/tnguye20">Author</a></button>
 					</div>
 				</div>
 				<div className="cover">
-					<img src={process.env.PUBLIC_URL + "/matebook.png"} alt="slider" />
+          {
+            //<img src={process.env.PUBLIC_URL + "/matebook.png"} alt="slider" />
+          }
+          <Slider
+            user={{interval: 5000, animation: "random"}}
+            bullets={true}
+            organicArrows={true}
+            filtered={[
+              {url: process.env.PUBLIC_URL + "/demo_1.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_2.jpg"}
+            ]}
+            fillParent={false}
+            caption={false}
+          />
 				</div>
 			</section>
 

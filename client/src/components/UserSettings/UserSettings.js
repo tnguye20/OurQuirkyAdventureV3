@@ -12,6 +12,7 @@ import {
 
 import { Account } from './Account';
 import { Slide } from './Slide';
+import './UserSettings.css';
 
 export const UserSettings = () => {
 
@@ -33,7 +34,8 @@ export const UserSettings = () => {
 
   return (
     <Container maxWidth="md">
-      <h1>Settings</h1>
+      <br /><br />
+      <h2>Settings</h2>
       <Grid container spacing={3} direction="row">
         <Grid item md={3} sm={3} xs={12}>
           { LeftMenu }

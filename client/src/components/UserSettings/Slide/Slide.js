@@ -64,9 +64,9 @@ export const Slide = ( { user } ) => {
       <br/>
       <form autoComplete="off" onSubmit={handleUpdate}>
         <FormControl variant="outlined" style={{ width: "100%" }}>
-            <InputLabel htmlFor="outlined-interval-native-simple">Slide Interval</InputLabel>
+            <InputLabel htmlFor="outlined-interval-native-simple">Slide Interval (seconds)</InputLabel>
             <Select
-              label="Slide Interval"
+              label="Slide Interval (seconds)"
               native
               value={interval}
               onChange={ e => setInterval(e.target.value) }

@@ -5,20 +5,30 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: #1d2021 !important;
+  background-color: #1d2021;
   color: white;
 }
 
 form label {
-  /* color: gray !important; */
+  color: gray !important;
 }
-form input {
-  /* color: lightgrey !important; */
+form input, select {
+  color: lightgrey !important;
 }
 
 code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
+}
+
+.header {
+  color: #c36cbb;
+}
+.header:active {
+  color: #c36cbb;
+}
+header:visited{
+  color: #c36cbb;
 }
 
 /* div.stocksHolder { */
