@@ -1,3 +1,3 @@
-import { AuthRoute, UnAuthRoute } from './AuthRoute';
+import { AuthRoute, UnAuthRoute, StaticRoute } from './AuthRoute';
 
-export { AuthRoute, UnAuthRoute };
+export { AuthRoute, UnAuthRoute, StaticRoute };

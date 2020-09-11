@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useHistory } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import { useFilterValue, useUserValue } from '../../contexts';
 import {
   makeStyles,
@@ -41,16 +41,10 @@ const useStyles = makeStyles(theme => ({
 }));
 
 export const Header = () => {
-  const history = useHistory();
   const classes = useStyles();
   const { setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const { user } = useUserValue();
   const [ open, setOpen ] = useState(false);
-
-  const handleSignOut = (e) => {
-    e.preventDefault();
-    history.push("/signout");
-  }
 
   const MenuList = () => (
     <div className={ classes.list }>
@@ -61,25 +55,31 @@ export const Header = () => {
         </ListItem>
 
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.UPLOAD)  } }>
-          <ListItemIcon><CloudUploadIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="Upload" />
-        </ListItem>
+    <NavLink to={ ROUTES.UPLOAD } activeClassName="navActive" onClick={ e => setOpen(false) }>
+          <ListItem button>
+            <ListItemIcon><CloudUploadIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="Upload" />
+          </ListItem>
+        </NavLink>
 
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.SLIDE)  } }>
-          <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="Slideshow" />
-        </ListItem>
+        <NavLink to={ ROUTES.SLIDE } activeClassName="navActive" onClick={ e => setOpen(false) } >
+          <ListItem button>
+            <ListItemIcon><PhotoAlbumIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="Slideshow" />
+          </ListItem>
+        </NavLink>
 
         <Divider />
-        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.GRID)  } }>
-          <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="Grid Mode" />
-        </ListItem>
+        <NavLink to={ ROUTES.GRID } activeClassName="navActive" onClick={ e => setOpen(false) } >
+          <ListItem button>
+            <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="Grid Mode" />
+          </ListItem>
+        </NavLink>
 
         <Divider />
-        <ListItem button onClick={ () => { setOpenFilter(true); setOpen(false) } }>
+        <ListItem button onClick={ () => { setOpen(false); setOpenFilter(true) } }>
           <ListItemIcon><FilterIcon htmlColor={"white"}/></ListItemIcon>
           <ListItemText primary="Filter Memories" />
         </ListItem>
@@ -97,16 +97,20 @@ export const Header = () => {
         }
 
         <Divider/>
-        <ListItem button onClick={ e => { setOpen(false); history.push(ROUTES.USER_SETTINGS) } }>
-          <ListItemIcon><SettingsIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="User Settings" />
-        </ListItem>
+        <NavLink to={ ROUTES.USER_SETTINGS } activeClassName="navActive" onClick={ e => setOpen(false) } >
+          <ListItem button>
+            <ListItemIcon><SettingsIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="User Settings" />
+          </ListItem>
+        </NavLink>
 
         <Divider/>
-        <ListItem button onClick={handleSignOut}>
-          <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>
-          <ListItemText primary="Sign Out" />
-        </ListItem>
+        <NavLink to={ ROUTES.SIGNOUT }>
+          <ListItem button>
+            <ListItemIcon><ExitToAppIcon htmlColor={"white"}/></ListItemIcon>
+            <ListItemText primary="Sign Out" />
+          </ListItem>
+        </NavLink>
 
         <Divider/>
 

@@ -50,3 +50,14 @@ export const UnAuthRoute = ({children, ...rest}) => {
     />
   )
 }
+
+export const StaticRoute = ({children, ...rest}) => {
+  return (
+    <Route
+      {...rest}
+      render={ () => (
+        children
+      )}
+    />
+  )
+}

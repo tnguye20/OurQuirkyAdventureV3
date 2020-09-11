@@ -7,6 +7,8 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #1d2021;
   color: white;
+  overflow-x: hidden !important;
+  max-width: 100% !important;
 }
 
 form label {
@@ -21,14 +23,22 @@ code {
     monospace;
 }
 
-.header {
+a.header, a.header:visited, a.header:active{
   color: #c36cbb;
 }
-.header:active {
-  color: #c36cbb;
+
+a {
+  color: inherit;
 }
-header:visited{
-  color: #c36cbb;
+a:active {
+  color: inherit;
+}
+a:visited{
+  color: inherit;
+}
+
+.navActive {
+  font-weight: bolder;
 }
 
 /* div.stocksHolder { */

@@ -21,8 +21,8 @@ export const Login = () => {
           <Link to="/" className="header">
             <Typography
               align="center"
-              variant="h1"
-              component="h2"
+              variant="h2"
+              component="h3"
               gutterBottom
             >
               Our Quirky Adventure

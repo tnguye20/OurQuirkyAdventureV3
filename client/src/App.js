@@ -12,7 +12,7 @@ import { Upload } from './components/Upload';
 import { Login } from './components/Login/';
 import { Signup } from './components/Signup/';
 import { Signout } from './components/Signout/';
-import { AuthRoute, UnAuthRoute } from './components/AuthRoute/';
+import { AuthRoute, UnAuthRoute, StaticRoute } from './components/AuthRoute/';
 import { Header } from './components/Header';
 import { UserSettings } from './components/UserSettings';
 
@@ -75,9 +75,9 @@ export const App = () => {
               </MemoriesContextProvider>
             </AuthRoute>
 
-            <UnAuthRoute path={ ROUTES.ROOT }>
+            <StaticRoute path={ ROUTES.ROOT }>
               <Landing />
-            </UnAuthRoute>
+            </StaticRoute>
 
           </Switch>
         </Router>

@@ -11,8 +11,9 @@ button {
 	font-family: 'Poppins', sans-serif;
 }
 
-a{
+a, a:visited, a:active, a:hover{
   text-decoration: none;
+  color: inherit
 }
 
 header {
@@ -27,6 +28,10 @@ header {
 .nav-links,
 .cart {
 	display: flex;
+}
+
+.cart div {
+  padding: 10px;
 }
 
 .logo-container {

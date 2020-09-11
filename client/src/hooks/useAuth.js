@@ -7,6 +7,7 @@ export const useAuth = () => {
   const [ authUser, setAuthUser ] = useState( (idToken !== null && uid !== null) ? {uid, idToken} : null );
 
   useEffect( () => {
+    console.log("We here dude");
     const unsubscribe = auth.onAuthStateChanged( user => {
       if(user){
         user.getIdToken(true).then( (idToken) => {

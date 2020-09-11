@@ -2,8 +2,15 @@ import React, { useEffect } from 'react';
 import { auth } from '../../utils/firebase';
 import { useAuthValue } from '../../contexts';
 
+import {
+  Grid,
+  Container,
+  Typography
+} from '@material-ui/core';
+
 export const Signout = () => {
   const { setAuthUser } = useAuthValue();
+
   useEffect( () => {
     auth.signOut().then( () => {
       setTimeout( () => {
@@ -15,7 +22,27 @@ export const Signout = () => {
       console.log(err);
     } )
   })
+
   return (
-    <h4> Signing Out </h4>
+    <Container maxWidth="md">
+      <Grid
+        container
+        spacing={0}
+        direction="column"
+        justify="center"
+        style={{ minHeight: '100vh'}}
+      >
+        <Grid item xs={12} sm={12}>
+          <Typography
+            align="center"
+            variant="h1"
+            component="h2"
+            gutterBottom
+          >
+            Signing Out...
+          </Typography>
+        </Grid>
+      </Grid>
+    </Container>
   )
 }

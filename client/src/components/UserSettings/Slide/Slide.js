@@ -2,23 +2,21 @@ import React, { useState } from 'react';
 import { db } from '../../../utils/firebase';
 import {
   Collapse,
-  TextField,
-  makeStyles,
+  // makeStyles,
   Button,
   FormControl,
   InputLabel,
   Select,
-  MenuItem,
 } from '@material-ui/core';
 import Alert from '@material-ui/lab/Alert';
 
 import * as ALERT_TYPES from '../../../constants/alerts';
 
-const useStyles = makeStyles((theme) => ({
-}));
+// const useStyles = makeStyles((theme) => ({
+// }));
 
 export const Slide = ( { user } ) => {
-  const classes = useStyles();
+  // const classes = useStyles();
 
   const [ alertOpen, setAlertOpen ] = useState(false);
   const [ alertType, setAlertType ] = useState(ALERT_TYPES.ALERT_SUCCESS);

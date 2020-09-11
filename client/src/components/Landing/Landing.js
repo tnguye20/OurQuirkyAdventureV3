@@ -16,26 +16,19 @@ export const Landing = () => {
 			</div>
 			<nav>
 				<ul className="nav-links">
-          <li>
-            <Link className="nav-link" to={ ROUTES.LOGIN }>
-              Features
-            </Link>
-          </li>
-          <li>
-            <Link className="nav-link" to={ ROUTES.SIGNUP }>
-              Sign Up
-            </Link>
-          </li>
 				</ul>
 			</nav>
 			<div className="cart">
-				<ul className="nav-links">
-          <li>
-            <Link className="nav-link" to={ ROUTES.LOGIN }>
-              Login
-            </Link>
-          </li>
-				</ul>
+        <div>
+          <Link className="nav-link" to={ ROUTES.SIGNUP }>
+            Register
+          </Link>
+        </div>
+        <div>
+          <Link className="nav-link" to={ ROUTES.LOGIN }>
+            Login
+          </Link>
+        </div>
 			</div>
 		</header>
 
@@ -58,12 +51,17 @@ export const Landing = () => {
             //<img src={process.env.PUBLIC_URL + "/matebook.png"} alt="slider" />
           }
           <Slider
-            user={{interval: 5000, animation: "random"}}
+            user={{interval: 3000, animation: "random"}}
             bullets={true}
             organicArrows={true}
             filtered={[
               {url: process.env.PUBLIC_URL + "/demo_1.jpg"},
-              {url: process.env.PUBLIC_URL + "/demo_2.jpg"}
+              {url: process.env.PUBLIC_URL + "/demo_2.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_3.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_4.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_5.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_6.jpg"},
+              {url: process.env.PUBLIC_URL + "/demo_7.jpg"},
             ]}
             fillParent={false}
             caption={false}
