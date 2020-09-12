@@ -43,7 +43,7 @@ export const GridMode = () => {
           filtered.length > 0 ? filtered.map( (item, index) => {
             const { url, title, comments, city, state, category } = item;
             return (
-              <Grid key={index} item md={6} sm={12} xs={12}>
+              <Grid key={index} item md={4} sm={12} xs={12}>
                 <Card>
                   <CardHeader
                    avatar={
@@ -115,7 +115,6 @@ export const GridOptions = ({
 
   const handleEditMemory = async (e, updatedInfo) => {
     e.preventDefault();
-    console.log("Submitting Changes");
     const newTags = updatedInfo.tags.filter( v => {
       return collections.indexOf(v) === -1;
     });

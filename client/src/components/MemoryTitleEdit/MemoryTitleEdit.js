@@ -7,10 +7,21 @@ import {
   DialogContentText,
   Button,
   TextField,
-  Chip
+  Chip,
+  Grid
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useUserValue } from '../../contexts';
+
+import moment from 'moment';
+
+import 'date-fns';
+import DateFnsUtils from '@date-io/date-fns';
+import {
+  MuiPickersUtilsProvider,
+  KeyboardTimePicker,
+  KeyboardDatePicker,
+} from '@material-ui/pickers';
 
 const nullReplace = (value, d="") => {
   if ( Array.isArray(value) ) return value.length > 0 ? value : [];
@@ -29,7 +40,7 @@ export const MemoryTitleEdit = ({
   const [ state, setState ] = useState(nullReplace(item.state));
   const [ country, setCountry ] = useState(nullReplace(item.country));
   const [ zipcode, setZipcode ] = useState(nullReplace(item.zipcode));
-  const [ takenDate, setTakenDate ] = useState(nullReplace(item.takenDate));
+  const [ takenDate, setTakenDate ] = useState(moment.utc(item.takenDate).toDate());
   const resetInputs = useState(0)[1];
 
   const { user } = useUserValue();
@@ -42,7 +53,7 @@ export const MemoryTitleEdit = ({
     state,
     country,
     zipcode,
-    takenDate
+    takenDate: takenDate.toISOString(),
   })
 
   return(
@@ -52,6 +63,7 @@ export const MemoryTitleEdit = ({
         <DialogContentText>
           Feel free to be as descriptive as possible.
         </DialogContentText>
+        <Grid container justify="space-around">
         <TextField
           autoFocus
           onFocus={e => e.target.select()}
@@ -94,14 +106,29 @@ export const MemoryTitleEdit = ({
           fullWidth
           value={zipcode}
         />
-        <TextField
-          onChange={e => setTakenDate(e.target.value)}
-          margin="dense"
-          id="takenDate"
-          label="Taken Date"
-          fullWidth
-          value={takenDate}
-        />
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+            <KeyboardDatePicker
+              margin="normal"
+              id="date-picker-dialog"
+              label="Date picker dialog"
+              format="MM/dd/yyyy"
+              value={takenDate}
+              onChange={date => setTakenDate(date)}
+              KeyboardButtonProps={{
+                'aria-label': 'change date',
+              }}
+            />
+            <KeyboardTimePicker
+              margin="normal"
+              id="time-picker"
+              label="Time picker"
+              value={takenDate}
+              onChange={time => setTakenDate(time)}
+              KeyboardButtonProps={{
+                'aria-label': 'change time',
+              }}
+            />
+        </MuiPickersUtilsProvider>
         <br />
         <Autocomplete
             multiple
@@ -122,7 +149,8 @@ export const MemoryTitleEdit = ({
             }
             renderInput={(params) => <TextField {...params} label="Tags"/>}
         />
-      </DialogContent>
+    </Grid>
+    </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
           Cancel
