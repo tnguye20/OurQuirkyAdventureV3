@@ -166,7 +166,7 @@ export const Upload = () => {
       }
       if(uploadPromises.length > 0){
         await Promise.all(uploadPromises);
-        history.push("/");
+        history.push("/slide");
       } else {
         setIsUploading(false);
       }
