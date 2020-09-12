@@ -52,7 +52,7 @@ export const GridMode = () => {
                      </Avatar>
                    }
                     action={
-                      <GridOptions item={item} user={user}/>
+                      <GridOptions item={item} user={user} key={index}/>
                     }
                     title={ title }
                     subheader={ city === undefined || city.length === 0 ? state : `${city}, ${state}` }
@@ -128,6 +128,7 @@ export const GridOptions = ({
     };
     await db.collection("memories").doc(memId).update(updatedInfo);
     setOpen(false);
+    closeAnchorEl();
   }
 
   return (

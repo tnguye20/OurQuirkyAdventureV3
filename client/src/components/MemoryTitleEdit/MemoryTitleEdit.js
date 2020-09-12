@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   Dialog,
   DialogTitle,
@@ -13,7 +13,7 @@ import {
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useUserValue } from '../../contexts';
 
-import moment from 'moment';
+// import moment from 'moment';
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
@@ -40,11 +40,21 @@ export const MemoryTitleEdit = ({
   const [ state, setState ] = useState(nullReplace(item.state));
   const [ country, setCountry ] = useState(nullReplace(item.country));
   const [ zipcode, setZipcode ] = useState(nullReplace(item.zipcode));
-  const [ takenDate, setTakenDate ] = useState(moment.utc(item.takenDate).toDate());
+  const [ takenDate, setTakenDate ] = useState(new Date(item.takenDate));
   const resetInputs = useState(0)[1];
 
   const { user } = useUserValue();
   const { collections } = user;
+
+  useEffect( () => {
+    setTitle(nullReplace(item.title));
+    setTags(nullReplace(item.tags));
+    setCity(nullReplace(item.city));
+    setState(nullReplace(item.state));
+    setCountry(nullReplace(item.country));
+    setZipcode(nullReplace(item.zipcode));
+    setTakenDate(new Date(item.takenDate));
+  }, [item]);
 
   const getUpdatedInfo = () =>  ({
     title,
@@ -63,7 +73,6 @@ export const MemoryTitleEdit = ({
         <DialogContentText>
           Feel free to be as descriptive as possible.
         </DialogContentText>
-        <Grid container justify="space-around">
         <TextField
           autoFocus
           onFocus={e => e.target.select()}
@@ -106,8 +115,10 @@ export const MemoryTitleEdit = ({
           fullWidth
           value={zipcode}
         />
+        <Grid container justify="space-around">
         <MuiPickersUtilsProvider utils={DateFnsUtils}>
             <KeyboardDatePicker
+              fullWidth
               margin="normal"
               id="date-picker-dialog"
               label="Date picker dialog"
@@ -119,6 +130,7 @@ export const MemoryTitleEdit = ({
               }}
             />
             <KeyboardTimePicker
+              fullWidth
               margin="normal"
               id="time-picker"
               label="Time picker"
@@ -129,7 +141,7 @@ export const MemoryTitleEdit = ({
               }}
             />
         </MuiPickersUtilsProvider>
-        <br />
+        </Grid>
         <Autocomplete
             multiple
             freeSolo
@@ -149,7 +161,6 @@ export const MemoryTitleEdit = ({
             }
             renderInput={(params) => <TextField {...params} label="Tags"/>}
         />
-    </Grid>
     </DialogContent>
       <DialogActions>
         <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
