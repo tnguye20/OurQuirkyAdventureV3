@@ -56,12 +56,14 @@ export const App = () => {
             </AuthRoute>
 
             <AuthRoute path={ ROUTES.USER_SETTINGS }>
-              <UserContextProvider>
-                <FilterContextProvider>
-                  <Header />
-                  <UserSettings />
-                </FilterContextProvider>
-              </UserContextProvider>
+              <MemoriesContextProvider>
+                <UserContextProvider>
+                  <FilterContextProvider>
+                    <Header />
+                    <UserSettings />
+                  </FilterContextProvider>
+                </UserContextProvider>
+              </MemoriesContextProvider>
             </AuthRoute>
 
             <AuthRoute path={ ROUTES.SLIDE }>

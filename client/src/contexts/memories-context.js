@@ -4,19 +4,20 @@ import { useMemories } from '../hooks/useMemories';
 export const MemoriesContext = createContext();
 
 export const MemoriesContextProvider = ({ children }) => {
-  const { 
+  const {
     memories,
-    cities,
-    states,
-    takenMonths,
-    takenYears,
+    // cities,
+    // states,
+    // takenMonths,
+    // takenYears,
+    filterObject,
     setMemories,
     filterBy,
     setFilterBy
   } = useMemories();
 
   return (
-    <MemoriesContext.Provider value={ { memories, cities, takenMonths, states, takenYears, setMemories, filterBy, setFilterBy } }>
+    <MemoriesContext.Provider value={ { memories, filterObject,  setMemories, filterBy, setFilterBy } }>
       { children }
     </MemoriesContext.Provider>
   )

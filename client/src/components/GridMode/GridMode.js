@@ -30,7 +30,7 @@ export const GridMode = () => {
   const { user } = useUserValue();
 
   const filtered =  memFilter(memories, filterCriteria);
-  console.log("Grid Loaded");
+  console.log(filtered);
 
   const handleComments = ( comments ) => {
   }
