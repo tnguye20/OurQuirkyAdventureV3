@@ -48,13 +48,13 @@ export const GridMode = () => {
       if( _filtered.length === 0 ) {
         // setItems([]);
         // setHasMoreItems(false);
-      } else if( _filtered.length <= 5 ){
+      } else if( _filtered.length <= 4 ){
         setItems(_filtered);
         setHasMoreItems(false);
       } else {
         setHasMoreItems(true);
-        setNextIndex(5);
-        setItems(_filtered.slice(0, 5));
+        setNextIndex(4);
+        setItems(_filtered.slice(0, 4));
       }
     }
   }, [memories, filterCriteria]);
@@ -65,11 +65,11 @@ export const GridMode = () => {
   const loadItems = () => {
     let _items = [];
     if(nextIndex !== -1){
-      if( nextIndex + 5 < filtered.length - 1){
-        _items = [...items, ...filtered.slice(nextIndex, nextIndex + 5)];
+      if( nextIndex + 4 < filtered.length - 1){
+        _items = [...items, ...filtered.slice(nextIndex, nextIndex + 4)];
         setItems(_items);
-        setNextIndex(nextIndex + 5);
-      } else if (nextIndex + 5 > filtered.length - 1 && nextIndex <= filtered.length - 1) {
+        setNextIndex(nextIndex + 4);
+      } else if (nextIndex + 4 > filtered.length - 1 && nextIndex <= filtered.length - 1) {
         _items = [...items, ...filtered.slice(nextIndex)];
         setNextIndex(-1);
         setItems(_items);
