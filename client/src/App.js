@@ -7,7 +7,8 @@ import { AuthProvider, MemoriesContextProvider, UserContextProvider, FilterConte
 import * as ROUTES from './constants/routes';
 
 import { OQA } from './components/OQA';
-import { GridMode } from './components/GridMode';
+// import { GridMode } from './components/GridMode';
+import { GridMode } from './components/GridMode-Infinite';
 import { Upload } from './components/Upload';
 import { Login } from './components/Login/';
 import { Signup } from './components/Signup/';
