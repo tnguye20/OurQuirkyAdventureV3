@@ -83,7 +83,7 @@ export const GridMode = () => {
     items.map( (item, index) => {
       const { url, title, comments, city, state, category } = item;
       return (
-        <Grid key={index} item md={6} sm={12} xs={12}>
+        <Grid key={index} item md={4} sm={12} xs={12}>
           <Card>
             <CardHeader
              avatar={
