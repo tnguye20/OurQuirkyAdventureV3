@@ -81,7 +81,7 @@ export const GridMode = () => {
 
   const getItems = () => (
     items.map( (item, index) => {
-      const { url, title, comments, city, state, category } = item;
+      const { url, title, comments, city, neighbourhood, state, category } = item;
       return (
         <Grid key={index} item md={4} sm={12} xs={12}>
           <Card>
@@ -95,7 +95,13 @@ export const GridMode = () => {
                 <GridOptions item={item} user={user} key={index}/>
               }
               title={ title }
-              subheader={ city === undefined || city.length === 0 ? state : `${city}, ${state}` }
+              subheader={
+                (city === undefined || city.length === 0) ?
+                state :
+                (neighbourhood === undefined || neighbourhood.length === 0) ?
+                `${city}, ${state}` :
+                `${neighbourhood} ${city}, ${state}`
+              }
             />
             <CardMedia
               component= { category === "image" ? "img" : category }

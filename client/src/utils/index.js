@@ -1,6 +1,9 @@
 import { memFilter } from './filterMemory';
+import { bytesToMegabytes } from './bytesToMegabytes';
 
-export { memFilter }
+export { bytesToMegabytes };
+
+export { memFilter };
 
 export const getImageSource = (image) => {
   const reader = new FileReader();

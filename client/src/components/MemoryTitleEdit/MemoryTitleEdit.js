@@ -37,6 +37,7 @@ export const MemoryTitleEdit = ({
   const [ title, setTitle ] = useState(nullReplace(item.title));
   const [ tags, setTags ] = useState(nullReplace(item.tags));
   const [ city, setCity ] = useState(nullReplace(item.city));
+  const [ neighbourhood, setNeighbourhood ] = useState(nullReplace(item.neighbourhood));
   const [ state, setState ] = useState(nullReplace(item.state));
   const [ country, setCountry ] = useState(nullReplace(item.country));
   const [ zipcode, setZipcode ] = useState(nullReplace(item.zipcode));
@@ -50,6 +51,7 @@ export const MemoryTitleEdit = ({
     setTitle(nullReplace(item.title));
     setTags(nullReplace(item.tags));
     setCity(nullReplace(item.city));
+    setNeighbourhood(nullReplace(item.neighbourhood));
     setState(nullReplace(item.state));
     setCountry(nullReplace(item.country));
     setZipcode(nullReplace(item.zipcode));
@@ -60,6 +62,7 @@ export const MemoryTitleEdit = ({
     title,
     tags,
     city,
+    neighbourhood,
     state,
     country,
     zipcode,
@@ -82,6 +85,14 @@ export const MemoryTitleEdit = ({
           label="Title"
           fullWidth
           value={title}
+        />
+        <TextField
+          onChange={e => setNeighbourhood(e.target.value)}
+          margin="dense"
+          id="city"
+          label="Neighbourhood/Location"
+          fullWidth
+          value={neighbourhood}
         />
         <TextField
           onChange={e => setCity(e.target.value)}

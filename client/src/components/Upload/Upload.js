@@ -2,8 +2,9 @@ import React, { useState } from 'react';
 import { storage, db } from '../../utils/firebase';
 import { ImagePreviews } from '../ImagePreviews';
 import { useAuthValue, useUserValue } from '../../contexts';
+import { useAlert } from '../../hooks/useAlert';
 import { FILE_FORMATS } from '../../constants/files';
-import { getImageSource, getVideoSource } from '../../utils';
+import { getImageSource, getVideoSource, bytesToMegabytes } from '../../utils';
 import { useHistory } from 'react-router-dom';
 import SaveIcon from '@material-ui/icons/Save';
 import CloudUploadIcon from '@material-ui/icons/CloudUpload';
@@ -14,6 +15,9 @@ import LabelIcon from '@material-ui/icons/Label';
 import SpeedDial from '@material-ui/lab/SpeedDial';
 import SpeedDialIcon from '@material-ui/lab/SpeedDialIcon';
 import SpeedDialAction from '@material-ui/lab/SpeedDialAction';
+import Alert from '@material-ui/lab/Alert';
+
+import * as ALERT_TYPES from '../../constants/alerts';
 
 import './Upload.css';
 
@@ -24,7 +28,8 @@ import {
   Grid,
   Button,
   LinearProgress,
-  makeStyles
+  makeStyles,
+  Collapse
 } from '@material-ui/core';
 
 // import axios from 'axios';
@@ -71,6 +76,7 @@ export const Upload = () => {
   const [ selection, setSelection ] = useState({});
   const [ openSelectionModal, setOpenSelectionModal ] = useState(false);
   const [ openDial, setOpenDial ] = useState(false);
+  const { alertOpen, alertType, alertMsg, setAlertOpen, setAlertMsg, setAlertType } = useAlert();
 
   const removeImage = (index) => {
     const tmpSelection = {...selection};
@@ -171,6 +177,12 @@ export const Upload = () => {
         setIsUploading(false);
       }
     } catch (err){
+      setAlertMsg();
+      setAlertType(ALERT_TYPES.ALERT_SUCCESS_MSG + " " + err.message);
+      setAlertOpen(true);
+      setInfo({});
+      setSelection({});
+      setFiles([]);
       setIsUploading(false);
       console.log(err);
     }
@@ -181,17 +193,18 @@ export const Upload = () => {
     setSelection({});
     setFiles([]);
     setIsUploading(true);
-    const files = e.target.files;
-    console.log(files);
+    setAlertOpen(false);
+    let _files = e.target.files;
     try{
-      if (files.length > 0){
+      if (_files.length > 0){
         let mediaSrcsArr = [];
         let newInfo = {};
         let newSelection = {};
-        for (const file of files){
-          const { type, name } = file;
+        const badFiles = [];
+        for (const file of _files){
+          const { type, name, size } = file;
           const category = type.split("/")[0];
-          if(FILE_FORMATS.indexOf(type) !== -1){
+          if(FILE_FORMATS.indexOf(type) !== -1 && bytesToMegabytes(size) <= 30 ){
             newInfo[name] = {
               category: category === "image" ? "img" : category,
               type,
@@ -208,16 +221,30 @@ export const Upload = () => {
             } else if (  category === "video" ) {
               mediaSrcsArr.push( getVideoSource(file) );
             }
+          } else {
+            badFiles.push(name);
           }
         }
+
+        if( badFiles.length > 0 ) {
+          e.target.files = null;
+          setAlertMsg(`${badFiles.join(", ")} violated file type or size restriction. Please choose again.`);
+          setAlertType(ALERT_TYPES.ALERT_ERROR);
+          setAlertOpen(true);
+          setInfo({});
+          setSelection({});
+          setFiles([]);
+          setIsUploading(false);
+          return false;
+        }
+
         setSelection(newSelection);
         mediaSrcsArr = await Promise.all(mediaSrcsArr);
         const infoKeys = Object.keys(newInfo);
         mediaSrcsArr.forEach( ( src, index ) => {
           newInfo[infoKeys[index]].src = src;
         } );
-        console.log(newInfo);
-        setFiles(files);
+        setFiles(_files);
         setInfo(newInfo);
         setIsUploading(false);
       }
@@ -243,6 +270,24 @@ export const Upload = () => {
       <Container maxWidth="md">
         <br /><br />
         <h2>Upload Memory</h2>
+        <br />
+        <Collapse in={alertOpen}>
+          <Alert
+            severity={alertType}
+            onClose={() => setAlertOpen(false)}
+          >
+            { alertMsg }
+          </Alert>
+          <br />
+        </Collapse>
+
+        <br />
+        <h3>Allowed formats and restriction</h3>
+        <p> <b>Video</b>: { FILE_FORMATS.filter( format => format.indexOf("video") !== -1 ).map( format => format.replace("video/", "") ).join(", ") } (non-mp4 files will be converted to mp4 for viewing purposes)</p>
+        <p> <b>Image</b>: { FILE_FORMATS.filter( format => format.indexOf("image") !== -1 ).map( format => format.replace("image/", "") ).join(", ") } </p>
+        <p><i>Limit to 20MB per file. Please upgrade to upload more.</i></p>
+
+        <br />
         <Grid container spacing={2} direction="row">
             {
               isUploading ? (
@@ -260,18 +305,6 @@ export const Upload = () => {
                   <Button id="uploadBtn" disabled={isUploading} className={classes.button, classes.hidden} type="submit" variant="contained" color="secondary" size="medium" startIcon={<SaveIcon />}>
                     Upload
                   </Button>
-                  {
-                    // isSelecting ? (
-                    //   <>
-                    //     <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="primary" size="medium" startIcon={<AddIcon />} onClick={ () => { setOpenSelectionModal(true) }}>
-                    //       Tag
-                    //     </Button>
-                    //     <Button disabled={isUploading && isSelecting} className={classes.button} variant="contained" color="secondary" size="medium" startIcon={<RemoveIcon />} onClick={ () => { resetSelection() }}>
-                    //       Reset
-                    //     </Button>
-                    //   </>
-                    // ) : ""
-                  }
                 </form>
               )
             }
