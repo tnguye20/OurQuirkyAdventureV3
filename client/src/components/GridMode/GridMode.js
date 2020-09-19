@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { useFilterValue, useMemoriesValue } from '../../contexts';
+import { useFilterValue, useMemoriesValue, useUserValue } from '../../contexts';
 
 import { db } from '../../utils/firebase';
 
@@ -25,44 +25,14 @@ import { Filter } from '../Filter';
 import { memFilter } from '../../utils';
 
 export const GridMode = () => {
-  const [ currentId, setCurrentId ] = useState(null);
-  const [ currentTitle, setCurrentTitle ] = useState("");
-  const [ anchorEl, setAnchorEl ] = useState(null);
-  const [ titleEdit, setTitleEdit ] = useState(false);
   const { openFilter, setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const { memories } = useMemoriesValue();
+  const { user } = useUserValue();
 
   const filtered =  memFilter(memories, filterCriteria);
-
-  const openAnchorEl = (e, id, title) => {
-    setCurrentId(id);
-    setCurrentTitle(title);
-    setAnchorEl(e.currentTarget);
-  }
-
-  const closeAnchorEl = (e) => {
-    setAnchorEl(null);
-  }
+  console.log(filtered);
 
   const handleComments = ( comments ) => {
-  }
-
-  const removeMemory = async () => {
-    if( currentId !== null ){
-      try {
-        db.collection("memories").doc(currentId).delete();
-        setAnchorEl(null);
-      } catch(e) {
-        console.log(e);
-      }
-    }
-  }
-
-  const handleEditTitle = (e) => {
-    e.preventDefault();
-    console.log(currentTitle);
-    db.collection("memories").doc(currentId).update( { title: currentTitle.trim() } );
-    setTitleEdit(false);
   }
 
   return (
@@ -71,9 +41,9 @@ export const GridMode = () => {
       <Grid container spacing={2} direction="row">
         {
           filtered.length > 0 ? filtered.map( (item, index) => {
-            const { id, url, title, comments, city, state, category } = item;
+            const { url, title, comments, city, state, category } = item;
             return (
-              <Grid key={index} item md={6} sm={12} xs={12}>
+              <Grid key={index} item md={4} sm={12} xs={12}>
                 <Card>
                   <CardHeader
                    avatar={
@@ -82,9 +52,7 @@ export const GridMode = () => {
                      </Avatar>
                    }
                     action={
-                      <IconButton aria-label="settings" aria-controls="edit-menu" onClick={ (e) => openAnchorEl(e, id, title) }>
-                        <MoreVertIcon />
-                      </IconButton>
+                      <GridOptions item={item} user={user} key={index}/>
                     }
                     title={ title }
                     subheader={ city === undefined || city.length === 0 ? state : `${city}, ${state}` }
@@ -113,6 +81,62 @@ export const GridMode = () => {
         }
       </Grid>
 
+      <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
+    </Container>
+  )
+};
+
+export const GridOptions = ({
+  item,
+  user
+}) => {
+  const [ anchorEl, setAnchorEl ] = useState(null);
+  const [ open, setOpen ] = useState(false);
+
+  const { id, collections } = user;
+  const memId = item.id;
+
+  const openAnchorEl = (e) => {
+    setAnchorEl(e.currentTarget);
+  }
+
+  const closeAnchorEl = (e) => {
+    setAnchorEl(null);
+  }
+
+  const removeMemory = async () => {
+    try {
+      db.collection("memories").doc(id).delete();
+      setAnchorEl(null);
+    } catch(e) {
+      console.log(e);
+    }
+  }
+
+  const handleEditMemory = async (e, updatedInfo) => {
+    e.preventDefault();
+    const newTags = updatedInfo.tags.filter( v => {
+      return collections.indexOf(v) === -1;
+    });
+    if(newTags.length > 0){
+      await db.collection("users").doc(id).update({
+        collections: [
+          ...collections,
+          ...newTags
+        ]
+      });
+    };
+    await db.collection("memories").doc(memId).update(updatedInfo);
+    setOpen(false);
+    closeAnchorEl();
+  }
+
+  return (
+    <>
+      <IconButton aria-label="settings" aria-controls="edit-menu" onClick={ (e) => openAnchorEl(e) }>
+        <MoreVertIcon />
+      </IconButton>
+
       <Menu
        id="edit-menu"
        anchorEl={anchorEl}
@@ -120,11 +144,12 @@ export const GridMode = () => {
        open={Boolean(anchorEl)}
        onClose={closeAnchorEl}
       >
-        <MenuItem onClick={ () => setTitleEdit(true) }>Edit Memory Title</MenuItem>
+        <MenuItem onClick={ () => setOpen(true) }>Edit Memory Information</MenuItem>
         <MenuItem onClick={ removeMemory } >Remove Memory</MenuItem>
       </Menu>
-      <MemoryTitleEdit title={currentTitle} setTitle={setCurrentTitle} handleEditTitle={handleEditTitle} open={titleEdit} handleClose={ () => setTitleEdit(false) } />
-      <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
-    </Container>
+
+
+      <MemoryTitleEdit item={item} handleEditMemory={handleEditMemory} open={open} handleClose={ () => setOpen(false) } />
+    </>
   )
-};
+}

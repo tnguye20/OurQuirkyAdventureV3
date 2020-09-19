@@ -14,7 +14,6 @@ export const OQA = () => {
   const { memories } = useMemoriesValue();
   const { openFilter, setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const { user } = useUserValue();
-
   useEffect(() => {
     console.log("Normal Load");
     // console.log('filterCriteria.size', filterCriteria.size);

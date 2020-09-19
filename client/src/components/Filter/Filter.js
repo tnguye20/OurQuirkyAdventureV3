@@ -22,8 +22,9 @@ export const Filter = ({
     filterCriteria,
     setFilterCriteria
 }) => {
-    const { cities, states, takenMonths, takenYears } = useMemoriesValue();
-    // const tmpMem = { ...memories };
+    const { filterObject } = useMemoriesValue();
+    const { cities, states, takenMonths, takenYears } = filterObject;
+
     const { user } = useUserValue();
     const { collections } = user;
 

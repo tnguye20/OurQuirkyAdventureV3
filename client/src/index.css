@@ -7,8 +7,6 @@ body {
   -moz-osx-font-smoothing: grayscale;
   background-color: #1d2021;
   color: white;
-  overflow-x: hidden !important;
-  max-width: 100% !important;
 }
 
 form label {

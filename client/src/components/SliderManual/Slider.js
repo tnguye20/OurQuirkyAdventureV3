@@ -54,7 +54,7 @@ export const Slider = ({
         video = currentSlide.slider.childNodes[0].childNodes[0].childNodes[0].childNodes[0].firstElementChild.firstElementChild;
       }
     }
-    if (isVideo){
+    if (isVideo && video !== null){
       video.controls = true;
       video.playsinline = true;
       video.playsInline = true;

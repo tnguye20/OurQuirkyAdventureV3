@@ -74,7 +74,7 @@ export const Header = () => {
         <NavLink to={ ROUTES.GRID } activeClassName="navActive" onClick={ e => setOpen(false) } >
           <ListItem button>
             <ListItemIcon><AppsIcon htmlColor={"white"}/></ListItemIcon>
-            <ListItemText primary="Grid Mode" />
+            <ListItemText primary="Gallery" />
           </ListItem>
         </NavLink>
 

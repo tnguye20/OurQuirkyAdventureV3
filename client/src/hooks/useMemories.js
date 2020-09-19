@@ -5,11 +5,18 @@ import { useAuthValue } from '../contexts/';
 export const useMemories = () => {
   const { authUser } = useAuthValue();
   const [ memories, setMemories ] = useState([]);
-  const [ cities, setCities ] = useState([]);
-  const [ states, setStates ] = useState([]);
-  const [ takenMonths, setMonths ] = useState([]);
-  const [ takenYears, setYears ] = useState([]);
+  // const [ cities, setCities ] = useState([]);
+  // const [ states, setStates ] = useState([]);
+  // const [ takenMonths, setMonths ] = useState([]);
+  // const [ takenYears, setYears ] = useState([]);
   const [ filterBy, setFilterBy ] = useState([]);
+
+  const [ filterObject, setFilterObject ] = useState({
+    cities: [],
+    states: [],
+    takenMonths: [],
+    takenYears: []
+  });
 
   useEffect(() => {
     let unsubscribe = db
@@ -45,10 +52,16 @@ export const useMemories = () => {
         }
         return filtered;
       }, []);
-      setCities(Array.from(_cities.keys()).sort( (a,b) => a > b));
-      setStates(Array.from(_states.keys()).sort( (a,b) => a > b));
-      setMonths(Array.from(_takenMonths.keys()).sort( (a,b) => a > b));
-      setYears(Array.from(_takenYears.keys()).sort( (a,b) => a > b));
+      // setCities(Array.from(_cities.keys()).sort( (a,b) => a > b));
+      // setStates(Array.from(_states.keys()).sort( (a,b) => a > b));
+      // setMonths(Array.from(_takenMonths.keys()).sort( (a,b) => a > b));
+      // setYears(Array.from(_takenYears.keys()).sort( (a,b) => a > b));
+      setFilterObject({
+        cities: Array.from(_cities.keys()).sort( (a,b) => a > b),
+        states: Array.from(_states.keys()).sort( (a,b) => a > b),
+        takenMonths: Array.from(_takenMonths.keys()).sort( (a,b) => a > b),
+        takenYears: Array.from(_takenYears.keys()).sort( (a,b) => a > b),
+      });
       setMemories(snapshotMemories);
     });
 
@@ -57,10 +70,11 @@ export const useMemories = () => {
 
   return {
     memories,
-    cities,
-    states,
-    takenMonths,
-    takenYears,
+    // cities,
+    // states,
+    // takenMonths,
+    // takenYears,
+    filterObject,
     setMemories,
     filterBy,
     setFilterBy
