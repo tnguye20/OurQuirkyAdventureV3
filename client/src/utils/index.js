@@ -1,9 +1,12 @@
-import { memFilter } from './filterMemory';
+import { memFilter, isUnion } from './filterMemory';
 import { bytesToMegabytes } from './bytesToMegabytes';
 
-export { bytesToMegabytes };
+export { memFilter, isUnion, bytesToMegabytes };
 
-export { memFilter };
+export const nullReplace = (value, d="") => {
+  if ( Array.isArray(value) ) return value.length > 0 ? value : [];
+  return value === undefined || value === null ? d : value;
+}
 
 export const getImageSource = (image) => {
   const reader = new FileReader();

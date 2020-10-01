@@ -16,6 +16,7 @@ import { Signout } from './components/Signout/';
 import { AuthRoute, UnAuthRoute, StaticRoute } from './components/AuthRoute/';
 import { Header } from './components/Header';
 import { UserSettings } from './components/UserSettings';
+import { EditMemory } from './components/EditMemory';
 
 import { Landing } from './components/Landing';
 
@@ -54,6 +55,17 @@ export const App = () => {
                   <Upload />
                 </FilterContextProvider>
               </UserContextProvider>
+            </AuthRoute>
+
+            <AuthRoute path={ ROUTES.EDIT_MEMORY }>
+              <MemoriesContextProvider>
+                <UserContextProvider>
+                  <FilterContextProvider>
+                    <Header />
+                    <EditMemory />
+                </FilterContextProvider>
+                </UserContextProvider>
+              </MemoriesContextProvider>
             </AuthRoute>
 
             <AuthRoute path={ ROUTES.USER_SETTINGS }>

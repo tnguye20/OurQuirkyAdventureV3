@@ -1,0 +1,21 @@
+.previewContainer {
+    position: relative;
+}
+
+video.selected, img.selected {
+    box-shadow: -5px 7px 5px 0px rgba(0,0,0,0.75);
+    border: purple solid 2px;
+}
+
+.selectIcon {
+    position: absolute;
+    /* top: 5%; */
+    right: 15%;
+    color: teal;
+}
+
+.tagIcon {
+    position: absolute;
+    right: 4%;
+    color: lightseagreen;
+}

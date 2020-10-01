@@ -8,23 +8,62 @@ import {
   Button,
   TextField,
   Chip,
-  Grid
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useUserValue } from '../../contexts';
-import { nullReplace } from '../../utils';
-
-// import moment from 'moment';
+import { isUnion, nullReplace } from '../../utils';
 
 import 'date-fns';
 import DateFnsUtils from '@date-io/date-fns';
 import {
   MuiPickersUtilsProvider,
-  KeyboardTimePicker,
   KeyboardDatePicker,
+  KeyboardTimePicker
 } from '@material-ui/pickers';
 
-export const MemoryTitleEdit = ({
+const compareDate = (date, _date) => {
+  date = new Date(date)
+  _date = new Date(_date)
+  const month = date.getMonth();
+  const _month = _date.getMonth();
+  const day = date.getDate();
+  const _day = _date.getDate();
+  const year = date.getFullYear();
+  const _year = _date.getFullYear();
+
+  if (month === _month && day === _day && year === _year) {
+    return date;
+  }
+  return ""
+}
+
+const aggragateItem = ( item ) => {
+    const ids = Object.keys(item);
+    const values = Object.values(item);
+  try {
+    if(ids.length > 0){
+      const reduced = values.reduce( (prev, current) => {
+        return {
+          city: prev.city === current.city ? prev.city : "",
+          title: prev.title === current.title ? prev.title : "",
+          neighbourhood: prev.neighbourhood === current.neighbourhood ? prev.neighbourhood : "",
+          state: prev.state === current.state ? prev.state : "",
+          country: prev.country === current.country ? prev.country : "",
+          zipcode: prev.zipcode === current.zipcode ? prev.zipcode : "",
+          takenDate: compareDate(prev.takenDate, current.takenDate),
+          tags: isUnion(prev.tags, current.tags, true)
+        }
+      });
+      return [ ids, reduced ];
+    }
+    return [[],{}];
+  } catch (err) {
+    console.log(err);
+    return [[],{}];
+  }
+}
+
+export const BulkMemoryEdit = ({
   open,
   handleClose,
   item,
@@ -38,39 +77,49 @@ export const MemoryTitleEdit = ({
   const [ country, setCountry ] = useState(nullReplace(item.country));
   const [ zipcode, setZipcode ] = useState(nullReplace(item.zipcode));
   const [ takenDate, setTakenDate ] = useState(new Date(item.takenDate));
+  const [ ids, setIDs ] = useState([]);
   const resetInputs = useState(0)[1];
 
   const { user } = useUserValue();
   const { collections } = user;
 
   useEffect( () => {
-    setTitle(nullReplace(item.title));
-    setTags(nullReplace(item.tags));
-    setCity(nullReplace(item.city));
-    setNeighbourhood(nullReplace(item.neighbourhood));
-    setState(nullReplace(item.state));
-    setCountry(nullReplace(item.country));
-    setZipcode(nullReplace(item.zipcode));
-    setTakenDate(new Date(item.takenDate));
+    console.log("item", item);
+    const [ ids, _item ] = aggragateItem(item);
+    setIDs(ids);
+    console.log("reduced", _item);
+    setTitle(nullReplace(_item.title));
+    setTags(nullReplace(_item.tags));
+    setCity(nullReplace(_item.city));
+    setNeighbourhood(nullReplace(_item.neighbourhood));
+    setState(nullReplace(_item.state));
+    setCountry(nullReplace(_item.country));
+    setZipcode(nullReplace(_item.zipcode));
+    setTakenDate(_item.takenDate === "" ? new Date() : new Date(_item.takenDate));
   }, [item]);
 
-  const getUpdatedInfo = () =>  ({
-    title,
-    tags,
-    city,
-    neighbourhood,
-    state,
-    country,
-    zipcode,
-    takenDate: takenDate.toISOString(),
-  })
+  const getUpdatedInfo = () =>  {
+    const data = {
+      title,
+      tags,
+      city,
+      neighbourhood,
+      state,
+      country,
+      zipcode,
+    }
+    Object.keys(data).forEach( key => {
+      if (data[key] === "" || data[key] === null) delete data[key];
+    });
+    return data;
+  }
 
   return(
     <Dialog open={open} onClose={ () => { resetInputs(1); handleClose(); } } aria-labelledby="form-dialog-title">
-      <DialogTitle id="form-dialog-title">Edit Memory Title</DialogTitle>
+      <DialogTitle id="form-dialog-title">Bulk Edit Memories</DialogTitle>
       <DialogContent>
         <DialogContentText>
-          Feel free to be as descriptive as possible.
+          Feel free to be as descriptive as possible. Common informations have been listed below.
         </DialogContentText>
         <TextField
           autoFocus
@@ -122,33 +171,37 @@ export const MemoryTitleEdit = ({
           fullWidth
           value={zipcode}
         />
-        <Grid container justify="space-around">
-        <MuiPickersUtilsProvider utils={DateFnsUtils}>
-            <KeyboardDatePicker
-              fullWidth
-              margin="normal"
-              id="date-picker-dialog"
-              label="Date picker dialog"
-              format="MM/dd/yyyy"
-              value={takenDate}
-              onChange={date => setTakenDate(date)}
-              KeyboardButtonProps={{
-                'aria-label': 'change date',
-              }}
-            />
-            <KeyboardTimePicker
-              fullWidth
-              margin="normal"
-              id="time-picker"
-              label="Time picker"
-              value={takenDate}
-              onChange={time => setTakenDate(time)}
-              KeyboardButtonProps={{
-                'aria-label': 'change time',
-              }}
-            />
-        </MuiPickersUtilsProvider>
-        </Grid>
+
+      <MuiPickersUtilsProvider utils={DateFnsUtils}>
+          <KeyboardDatePicker
+            fullWidth
+            margin="normal"
+            id="date-picker-dialog"
+            label="Date picker dialog"
+            format="MM/dd/yyyy"
+            value={takenDate}
+            onChange={date => setTakenDate(date)}
+            KeyboardButtonProps={{
+              'aria-label': 'change date',
+            }}
+          />
+          {
+            Object.keys(item).length === 1 ? (
+              <KeyboardTimePicker
+                fullWidth
+                margin="normal"
+                id="time-picker"
+                label="Time picker"
+                value={takenDate}
+                onChange={time => setTakenDate(time)}
+                KeyboardButtonProps={{
+                  'aria-label': 'change time',
+                }}
+              />
+            ) : <></>
+          }
+      </MuiPickersUtilsProvider>
+
         <Autocomplete
             multiple
             freeSolo
@@ -173,7 +226,7 @@ export const MemoryTitleEdit = ({
         <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
           Cancel
         </Button>
-        <Button onClick={ (e) => {handleEditMemory(e, getUpdatedInfo())} } color="primary" variant="outlined" size="small">
+        <Button onClick={ (e) => {handleEditMemory(e, ids, getUpdatedInfo())} } color="primary" variant="outlined" size="small">
           Submit
         </Button>
       </DialogActions>

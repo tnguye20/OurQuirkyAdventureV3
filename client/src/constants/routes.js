@@ -3,6 +3,7 @@ export const SIGNUP = '/signup';
 export const SIGNOUT = '/signout';
 export const APP = '/app';
 export const ROOT = '/';
+export const EDIT_MEMORY = '/edit';
 export const GRID = '/gallery';
 export const SLIDE = '/slide';
 export const UPLOAD = '/upload';
