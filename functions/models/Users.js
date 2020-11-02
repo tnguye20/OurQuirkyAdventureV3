@@ -51,7 +51,7 @@ exports.makeUser = ({
     setEmail,
     getData,
     setToken,
-    setDisplayName
+    setDisplayName,
     addCollection,
   })
 }
