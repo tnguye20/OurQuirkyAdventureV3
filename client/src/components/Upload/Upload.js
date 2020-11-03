@@ -35,8 +35,6 @@ import {
   Collapse
 } from '@material-ui/core';
 
-// import axios from 'axios';
-
 const useStyles = makeStyles((theme) => ({
   button: {
       margin: theme.spacing(1),
@@ -181,8 +179,8 @@ export const Upload = () => {
         const badFiles = [];
         for (const file of _files){
           const { type, name, size } = file;
-          const category = type.split("/")[0];
-          if(FILE_FORMATS.indexOf(type) !== -1 && bytesToMegabytes(size) <= 30 ){
+          const [category, extension] = type.split("/");
+          if(FILE_FORMATS.indexOf(type) !== -1 && (bytesToMegabytes(size) <= 20 || extension.toLowerCase() === 'mp4')){
             newInfo[name] = {
               category: category === "image" ? "img" : category,
               type,
@@ -263,7 +261,7 @@ export const Upload = () => {
         <h3>Allowed formats and restriction</h3>
         <p> <b>Video</b>: { FILE_FORMATS.filter( format => format.indexOf("video") !== -1 ).map( format => format.replace("video/", "") ).join(", ") } (non-mp4 files will be converted to mp4 for viewing purposes)</p>
         <p> <b>Image</b>: { FILE_FORMATS.filter( format => format.indexOf("image") !== -1 ).map( format => format.replace("image/", "") ).join(", ") } </p>
-        <p><i>Limit to 20MB per file. Please upgrade to upload more.</i></p>
+        <p><i>Limit to 20MB per video file if not in mp4 format.</i></p>
 
         <br />
         <Grid container spacing={2} direction="row">

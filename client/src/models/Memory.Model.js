@@ -1,7 +1,7 @@
 export const Memory = ({
   id=null,
   user,
-  title='One of my best memories with you',
+  title,
   name,
   url,
   category,
@@ -24,6 +24,7 @@ export const Memory = ({
     throw new Error("Invalid file size");
   }
   isConverting = category === "video" && extension !== "mp4";
+  title = (title === "" || title === undefined || title === null) ? 'One of my best memories with you' : title;
 
   const memory = {
     user,

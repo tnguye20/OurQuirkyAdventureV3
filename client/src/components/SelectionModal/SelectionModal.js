@@ -29,11 +29,11 @@ export const SelectionModal = ({
     const { uid } = authUser;
     const [ value, setValue ] = useState([]);
 
-  useEffect( () => {
-    if(isSingular && info[selectedFile] !== undefined){
-      setValue(info[selectedFile].tags);
-    }
-  }, [info, selectedFile, isSingular]);
+    useEffect( () => {
+      if(isSingular && info[selectedFile] !== undefined){
+        setValue(info[selectedFile].tags);
+      }
+    }, [info, selectedFile, isSingular]);
 
     const addToCollection = () => {
       const tmpInfo = {...info};
@@ -43,10 +43,10 @@ export const SelectionModal = ({
           tmpInfo[selectedFile].tags = [ ...value];
         }
       } else {
-        Object.entries(selection).forEach( entry => {
+        Object.entries(selection).forEach((entry) => {
           const [k, v] = entry;
           const { select } = v;
-          if (select === true) {
+          if (select === true && tmpInfo[k]) {
             tmpInfo[k].tags = [...tmpInfo[k].tags, ...value];
           }
         });
