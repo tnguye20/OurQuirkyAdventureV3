@@ -22,6 +22,8 @@ import {
 } from '@material-ui/pickers';
 
 const compareDate = (date, _date) => {
+  console.log(date);
+  console.log(_date);
   date = new Date(date)
   _date = new Date(_date)
   const month = date.getMonth();
@@ -34,7 +36,7 @@ const compareDate = (date, _date) => {
   if (month === _month && day === _day && year === _year) {
     return date;
   }
-  return ""
+  return "";
 }
 
 const aggragateItem = ( item ) => {
@@ -56,6 +58,7 @@ const aggragateItem = ( item ) => {
       });
       return [ids, reduced];
     }
+
     return [[],{}];
   } catch (err) {
     console.log(err);
@@ -96,7 +99,12 @@ export const BulkMemoryEdit = ({
     setState(nullReplace(_item.state));
     setCountry(nullReplace(_item.country));
     setZipcode(nullReplace(_item.zipcode));
-    setTakenDate(_item.takenDate === "" ? new Date() : new Date(_item.takenDate));
+    if (_item.takenDate !== ""){
+      setTakenDate(new Date(_item.takenDate));
+    }
+    else {
+      setTakenDate(null);
+    }
   }, [item]);
 
   const getUpdatedInfo = () =>  {
@@ -107,8 +115,9 @@ export const BulkMemoryEdit = ({
       neighbourhood,
       state,
       country,
-      zipcode,
+      zipcode
     }
+    if ( takenDate ) data.takenDate =  takenDate.toISOString();
     Object.keys(data).forEach( key => {
       if (data[key] === "" || data[key] === null) delete data[key];
     });
@@ -173,35 +182,40 @@ export const BulkMemoryEdit = ({
           value={zipcode}
         />
 
-      <MuiPickersUtilsProvider utils={DateFnsUtils}>
-          <KeyboardDatePicker
+    {
+      takenDate !== null
+      ? (
+        <MuiPickersUtilsProvider utils={DateFnsUtils}>
+        <KeyboardDatePicker
+        fullWidth
+        margin="normal"
+        id="date-picker-dialog"
+        label="Date picker dialog"
+        format="MM/dd/yyyy"
+        value={takenDate}
+        onChange={date => setTakenDate(date)}
+        KeyboardButtonProps={{
+          'aria-label': 'change date',
+        }}
+        />
+        {
+          Object.keys(item).length === 1 ? (
+            <KeyboardTimePicker
             fullWidth
             margin="normal"
-            id="date-picker-dialog"
-            label="Date picker dialog"
-            format="MM/dd/yyyy"
+            id="time-picker"
+            label="Time picker"
             value={takenDate}
-            onChange={date => setTakenDate(date)}
+            onChange={time => setTakenDate(time)}
             KeyboardButtonProps={{
-              'aria-label': 'change date',
+              'aria-label': 'change time',
             }}
-          />
-          {
-            Object.keys(item).length === 1 ? (
-              <KeyboardTimePicker
-                fullWidth
-                margin="normal"
-                id="time-picker"
-                label="Time picker"
-                value={takenDate}
-                onChange={time => setTakenDate(time)}
-                KeyboardButtonProps={{
-                  'aria-label': 'change time',
-                }}
-              />
-            ) : <></>
-          }
-      </MuiPickersUtilsProvider>
+            />
+          ) : <></>
+        }
+        </MuiPickersUtilsProvider>
+      ) : ''
+    }
 
         <Autocomplete
             multiple

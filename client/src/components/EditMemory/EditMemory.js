@@ -69,6 +69,7 @@ export const EditMemory = () => {
   }
 
   const handleEditMemory = async (e, ids, data) => {
+    console.log(data);
     try {
       const m = ids.map((id) => MemoriesDAO.updateByID({
         id,
