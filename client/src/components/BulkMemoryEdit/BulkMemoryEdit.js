@@ -54,7 +54,7 @@ const aggragateItem = ( item ) => {
           tags: isUnion(prev.tags, current.tags, true)
         }
       });
-      return [ ids, reduced ];
+      return [ids, reduced];
     }
     return [[],{}];
   } catch (err) {
@@ -66,6 +66,7 @@ const aggragateItem = ( item ) => {
 export const BulkMemoryEdit = ({
   open,
   handleClose,
+  handleDelete,
   item,
   handleEditMemory,
 }) => {
@@ -223,11 +224,11 @@ export const BulkMemoryEdit = ({
         />
     </DialogContent>
       <DialogActions>
-        <Button onClick={handleClose} color="secondary" variant="outlined" size="small">
-          Cancel
+        <Button onClick={(e) => {handleDelete(e, ids, getUpdatedInfo())}} color="secondary" variant="contained" size="small">
+          Delete
         </Button>
-        <Button onClick={ (e) => {handleEditMemory(e, ids, getUpdatedInfo())} } color="primary" variant="outlined" size="small">
-          Submit
+        <Button onClick={ (e) => {handleEditMemory(e, ids, getUpdatedInfo())} } color="primary" variant="contained" size="small">
+          Edit
         </Button>
       </DialogActions>
     </Dialog>

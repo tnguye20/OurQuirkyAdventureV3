@@ -1,7 +1,8 @@
 import { memFilter, isUnion } from './filterMemory';
 import { bytesToMegabytes } from './bytesToMegabytes';
+import { db } from './firebase';
 
-export { memFilter, isUnion, bytesToMegabytes };
+export { memFilter, isUnion, bytesToMegabytes, db };
 
 export const nullReplace = (value, d="") => {
   if ( Array.isArray(value) ) return value.length > 0 ? value : [];

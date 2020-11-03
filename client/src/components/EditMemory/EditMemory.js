@@ -14,7 +14,10 @@ import { BulkMemoryEdit } from '../BulkMemoryEdit';
 
 import './EditMemory.css';
 
+import { MemoriesDAO } from '../../data-access';
+
 export const EditMemory = () => {
+
   const { memories } = useMemoriesValue();
   const { openFilter, setOpenFilter, filterCriteria, setFilterCriteria } = useFilterValue();
   const [ selection, setSelection ] = useState({});
@@ -22,8 +25,6 @@ export const EditMemory = () => {
   let tmpSelection = {};
 
   const filtered =  memFilter(memories, filterCriteria);
-
-  console.log("--Edit Reload--");
 
   const handleClick = (e, item) => {
     e.preventDefault();
@@ -54,9 +55,33 @@ export const EditMemory = () => {
     }
   }
 
-  const handleEditMemory = (e, ids, data) => {
-    console.log("ids", ids);
-    console.log("data", data);
+  const handleDelete = async (e, ids, data) => {
+    try {
+      const m = ids.map((id) => MemoriesDAO.deleteByID(id));
+      await Promise.all(m);
+    }
+    catch (err) {
+      console.log(err);
+    }
+    finally {
+      handleClose();
+    }
+  }
+
+  const handleEditMemory = async (e, ids, data) => {
+    try {
+      const m = ids.map((id) => MemoriesDAO.updateByID({
+        id,
+        data
+      }));
+      await Promise.all(m);
+    }
+    catch (err) {
+      console.log(err);
+    }
+    finally {
+      handleClose();
+    }
   }
 
   return (
@@ -94,7 +119,7 @@ export const EditMemory = () => {
         </Grid>
       </Container>
 
-      <BulkMemoryEdit item={selection} open={open} handleEditMemory={handleEditMemory} handleClose={ handleClose } />
+      <BulkMemoryEdit item={selection} open={open} handleEditMemory={handleEditMemory} handleClose={handleClose} handleDelete={handleDelete}/>
 
       <Filter open={openFilter} handleClose={ e => setOpenFilter(false) } filterCriteria={filterCriteria} setFilterCriteria={setFilterCriteria}/>
     </>
