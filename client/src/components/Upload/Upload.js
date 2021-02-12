@@ -23,6 +23,9 @@ import './Upload.css';
 
 import { SelectionModal } from '../SelectionModal';
 
+import { MemoriesDAO } from '../../data-access';
+import { Memory } from '../../models';
+
 import {
   Container,
   Grid,
@@ -31,8 +34,6 @@ import {
   makeStyles,
   Collapse
 } from '@material-ui/core';
-
-// import axios from 'axios';
 
 const useStyles = makeStyles((theme) => ({
   button: {
@@ -115,61 +116,36 @@ export const Upload = () => {
     e.preventDefault();
     setIsUploading(true);
     try {
-      const uploadPromises = [];
       const now = Date.now();
-      for(const file of files){
+      const uploadPromises = Array.from(files).map(async (file) => {
+        //Upload the files to storage
         const { name, type, size } = file;
         const mimetype = type;
         const [ category, extension ] = mimetype.split("/");
         const nameOnly = name.split(".")[0];
         const newName = `${nameOnly}_${now}.${extension}`;
         const fullPath = `${uid}/${category}/${newName}`;
-        const promise = storage.child(fullPath).put(file).then( async snapshot => {
-          const url = await snapshot.ref.getDownloadURL();
-          const metadata = await snapshot.ref.getMetadata();
-          const { timeCreated } = metadata;
-          const { title, comment, tags } = info[name];
-          info[name] = {
-            user: uid,
-            title,
-            url,
-            category,
-            extension,
-            size,
-            mimetype,
-            uploadDate: timeCreated,
-            name: newName,
-            takenDate: new Date().toISOString(),
-            comments: [],
-            tags,
-            isConverting: category === "video" && extension !== "mp4" ? true : false
-          };
-          if (title.length === 0 ){
-            info[name].title = "One of my best memories with you";
-          }
-          db.collection("memories").add(info[name]).then( ref => {
-            if (comment.length > 0) {
-              info[name].comment = {
-                memoryID: ref.id,
-                user: uid,
-                createDate: timeCreated,
-                text: comment,
-                replyToId: null,
-                modifiedOn: timeCreated,
-              }
-              db.collection("memories").doc(ref.id).update({comments: [ info[name].comment ]})
-            } else {
-              info[name].comments = [];
-            }
-          })
-          // const formData = new FormData();
-          // formData.append("info", JSON.stringify(info[name]));
-          // await axios.post("api/memory/info", formData , {
-          //   headers: { "Authorization": "Bearer " + tokenId }
-          // });
-        })
-        uploadPromises.push(promise);
-      }
+        const snapshot = await storage.child(fullPath).put(file);
+
+        //Create the record in the DB with the URL
+        const url = await snapshot.ref.getDownloadURL();
+        const metadata = await snapshot.ref.getMetadata();
+        const { timeCreated } = metadata;
+        const { title, comment, tags } = info[name];
+        const model = Memory({
+          user: uid,
+          title,
+          url,
+          category,
+          extension,
+          size,
+          mimetype,
+          uploadDate: timeCreated,
+          name: newName,
+          tags,
+        });
+        return MemoriesDAO.insert({ model });
+      });
       if(uploadPromises.length > 0){
         await Promise.all(uploadPromises);
         history.push("/slide");
@@ -203,8 +179,8 @@ export const Upload = () => {
         const badFiles = [];
         for (const file of _files){
           const { type, name, size } = file;
-          const category = type.split("/")[0];
-          if(FILE_FORMATS.indexOf(type) !== -1 && bytesToMegabytes(size) <= 30 ){
+          const [category, extension] = type.split("/");
+          if(FILE_FORMATS.indexOf(type) !== -1 && (bytesToMegabytes(size) <= 20 || extension.toLowerCase() === 'mp4')){
             newInfo[name] = {
               category: category === "image" ? "img" : category,
               type,
@@ -285,7 +261,7 @@ export const Upload = () => {
         <h3>Allowed formats and restriction</h3>
         <p> <b>Video</b>: { FILE_FORMATS.filter( format => format.indexOf("video") !== -1 ).map( format => format.replace("video/", "") ).join(", ") } (non-mp4 files will be converted to mp4 for viewing purposes)</p>
         <p> <b>Image</b>: { FILE_FORMATS.filter( format => format.indexOf("image") !== -1 ).map( format => format.replace("image/", "") ).join(", ") } </p>
-        <p><i>Limit to 20MB per file. Please upgrade to upload more.</i></p>
+        <p><i>Limit to 20MB per video file if not in mp4 format.</i></p>
 
         <br />
         <Grid container spacing={2} direction="row">

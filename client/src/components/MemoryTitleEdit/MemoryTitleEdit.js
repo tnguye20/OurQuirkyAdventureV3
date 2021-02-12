@@ -12,6 +12,7 @@ import {
 } from '@material-ui/core';
 import Autocomplete from '@material-ui/lab/Autocomplete';
 import { useUserValue } from '../../contexts';
+import { nullReplace } from '../../utils';
 
 // import moment from 'moment';
 
@@ -23,16 +24,11 @@ import {
   KeyboardDatePicker,
 } from '@material-ui/pickers';
 
-const nullReplace = (value, d="") => {
-  if ( Array.isArray(value) ) return value.length > 0 ? value : [];
-  return value === undefined || value === null ? d : value;
-}
-
 export const MemoryTitleEdit = ({
   open,
   handleClose,
   item,
-  handleEditMemory
+  handleEditMemory,
 }) => {
   const [ title, setTitle ] = useState(nullReplace(item.title));
   const [ tags, setTags ] = useState(nullReplace(item.tags));
@@ -89,7 +85,7 @@ export const MemoryTitleEdit = ({
         <TextField
           onChange={e => setNeighbourhood(e.target.value)}
           margin="dense"
-          id="city"
+          id="neighbourhood"
           label="Neighbourhood/Location"
           fullWidth
           value={neighbourhood}

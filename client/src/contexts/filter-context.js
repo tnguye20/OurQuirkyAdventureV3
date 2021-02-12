@@ -18,13 +18,13 @@ export const FilterContextProvider = ({ children }) => {
     const [ filterCriteria, setFilterCriteria ] = useState(_map);
 
     return (
-        <FilterContext.Provider value={ {
+        <FilterContext.Provider value={{
             openFilter,
             setOpenFilter,
             filterCriteria,
             setFilterCriteria
         }} >
-            { children}
+            { children }
         </FilterContext.Provider>
     )
 }
